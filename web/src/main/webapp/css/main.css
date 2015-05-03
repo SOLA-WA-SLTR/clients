@@ -12,28 +12,32 @@ body{
     background-color: #e6eddf;
 }
 
-#PageHeader, #PageHeaderCaption, #PageHeaderLogo, #PageHeaderLogin {
+#PageHeaderCaption, #PageHeaderLogin {
     height: 60px;
     background-color: #217c95;
     font-family: Arial, sans-serif;
-    line-height: 60px;
+    padding-top: 20px;
     color: #fff;
     vertical-align: middle;
 }
 
 #PageHeader{
     font: large arial;
+    height: 60px;
+    background-color: #217c95;
 }
 
 #PageHeaderCaption{
     float: left;
     font-size: large;
+    line-height: 15px;
     padding-left: 10px;
 }
 
 #PageHeaderLogo{
     float: left; 
     width: 120px;
+    line-height: 60px;
     background-color: white; 
     text-align: center;    
 }

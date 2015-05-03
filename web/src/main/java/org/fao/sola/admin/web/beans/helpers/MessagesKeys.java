@@ -11,6 +11,10 @@ public class MessagesKeys {
      * OpenTenure Community Server
      */
     public static final String GENERAL_APP_NAME = "GENERAL_APP_NAME";
+    /**
+     * Unknown
+     */
+    public static final String GENERAL_LABEL_UNKNOWN = "GENERAL_LABEL_UNKNOWN";
 
     /** New */
     public static final String GENERAL_LABEL_NEW = "GENERAL_LABEL_NEW";

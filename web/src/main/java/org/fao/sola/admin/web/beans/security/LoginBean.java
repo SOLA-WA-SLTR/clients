@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.fao.sola.admin.web.beans.helpers.ErrorKeys;
 import org.fao.sola.admin.web.beans.helpers.MessageProvider;
+import org.fao.sola.admin.web.beans.system.SystemBean;
 import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 
 @Named
@@ -21,6 +22,9 @@ public class LoginBean implements Serializable {
     @Inject
     MessageProvider msgProvider;
     
+    @Inject
+    SystemBean systemBean;
+            
     @Inject
     ActiveUserBean activeUserBean;
     
@@ -60,6 +64,8 @@ public class LoginBean implements Serializable {
                 return;
             }
              
+            // Init system settings
+            systemBean.init();
             // Redirect
             context.getExternalContext().redirect(request.getContextPath() + "/index.xhtml");
         } catch (ServletException e) {
@@ -80,6 +86,8 @@ public class LoginBean implements Serializable {
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         try {
             request.logout();
+            // Flush system settings from session
+            systemBean.flush();
             // Redirect
             context.getExternalContext().redirect(request.getContextPath() + "/login.xhtml");
         } catch (ServletException e) {
