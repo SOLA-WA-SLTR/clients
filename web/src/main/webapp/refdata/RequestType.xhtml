@@ -80,7 +80,7 @@
                             </h:column>
                             <h:column>
                                 <f:facet name="header">#{msg.REFDATA_PAGE_REQUEST_TYPES_GROUP_NAME}</f:facet>
-                                    #{r.displayGroupName}
+                                    #{requestTypePageBean.getDisplayGroupName(r.displayGroupCode)}
                             </h:column>
                             <h:column>
                                 <f:facet name="header">#{msg.REFDATA_PAGE_CONFIG_PANEL_LAUNCHER}</f:facet>
@@ -115,14 +115,13 @@
                                                 <li><a href="#description" data-toggle="tab">#{msg.REFDATA_PAGE_DESCRIPTION}</a></li>
                                                 <li><a href="#source" data-toggle="tab">#{msg.REFDATA_PAGE_REQUEST_TYPES_DOCUMENT_TYPES}</a></li>
                                                 <li><a href="#additional" data-toggle="tab">#{msg.REFDATA_PAGE_REQUEST_TYPES_ADDITIONAL}</a></li>
-                                                <li><a href="#group" data-toggle="tab">#{msg.REFDATA_PAGE_REQUEST_TYPES_GROUP}</a></li>
                                             </ul>
 
                                             <!-- Tab panes -->
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="general" style="padding-top: 10px;">
                                                     <div class="row">
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
                                                             <label>
                                                                 #{msg.REFDATA_PAGE_CODE} <i class="glyphicon glyphicon-required"></i>
                                                             </label>
@@ -133,7 +132,7 @@
                                                                          maxlength="20"
                                                                          autocomplete="off" />
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
                                                             <label>
                                                                 #{msg.REFDATA_PAGE_REQUEST_TYPES_CATEGORY} <i class="glyphicon glyphicon-required"></i>
                                                             </label>
@@ -144,7 +143,18 @@
                                                                                var="c" itemValue="#{c.code}" itemLabel="#{c.displayValue}" />
                                                             </h:selectOneListbox>
                                                         </div>
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-3">
+                                                            <label>
+                                                                #{msg.REFDATA_PAGE_REQUEST_DISPLAY_GROUP}
+                                                            </label>
+                                                            <h:selectOneListbox id="lstDisplayGroups" size="1"
+                                                                                class="form-control"
+                                                                                value="#{requestTypePageBean.requestType.displayGroupCode}">
+                                                                <f:selectItems value="#{requestTypePageBean.displayGroups}" 
+                                                                               var="c" itemValue="#{c.code}" itemLabel="#{c.displayValue}" />
+                                                            </h:selectOneListbox>
+                                                        </div>
+                                                        <div class="col-md-3">
                                                             <label>
                                                                 #{msg.REFDATA_PAGE_STATUS} <i class="glyphicon glyphicon-required"></i>
                                                             </label>
@@ -292,15 +302,6 @@
                                                         <div class="col-md-4">
                                                         </div>
                                                     </div>
-                                                </div>
-
-                                                <div class="tab-pane" id="group" style="padding-top: 10px;">
-                                                    <ui:include src="/controls/LocalizedTextBoxControl.xhtml">
-                                                        <ui:param name="required" value="false" rendererType="java.lang.Boolean" />
-                                                        <ui:param name="label" value="#{msg.REFDATA_PAGE_REQUEST_TYPES_GROUP}" rendererType="java.lang.String" />
-                                                        <ui:param name="localizedValues" value="#{requestTypePageBean.localizedDisplayGroupValues.localizedValuesArray}" rendererType="org.sola.clients.web.admin.beans.localization.LocalizedValueBean[]" />
-                                                        <ui:param name="columnsNumber" value="2" rendererType="java.lang.Integer" />
-                                                    </ui:include>
                                                 </div>
                                             </div>
                                         </div>

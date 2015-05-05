@@ -34,6 +34,10 @@
                                     <ui:fragment rendered="#{not systemBean.isSolaCommunityServer}">
                                         <li><a href="#">#{msg.MAIN_MENU_APPLICATION}</a>
                                             <ul class="dropdown-menu">
+                                                <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=REQUEST_DISPLAY_GROUP">
+                                                        #{msg.REFDATA_PAGE_REQUEST_DISPLAY_GROUPS}
+                                                    </a>
+                                                </li>
                                                 <li><a href="#{request.contextPath}/refdata/RequestType.xhtml">
                                                         #{msg.REFDATA_PAGE_REQUEST_TYPE}
                                                     </a>
@@ -62,6 +66,44 @@
                                                         #{msg.REFDATA_PAGE_TYPE_ACTIONS}
                                                     </a>
                                                 </li>
+                                                <ui:fragment rendered="#{systemBean.isSolaStateLand}">
+                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=AUTHORITY">
+                                                            #{msg.REFDATA_PAGE_AUTHORITYS}
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=PUBLIC_DISPLAY_TYPE">
+                                                            #{msg.REFDATA_PAGE_PUBLIC_DISPLAY_TYPES}
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=PUBLIC_DISPLAY_STATUS">
+                                                            #{msg.REFDATA_PAGE_PUBLIC_DISPLAY_STATUSS}
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=OBJECTION_STATUS">
+                                                            #{msg.REFDATA_PAGE_OBJECTION_STATUSS}
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=NOTIFY_RELATIONSHIP_TYPE">
+                                                            #{msg.REFDATA_PAGE_NOTIFY_RELATIONSHIP_TYPES}
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=NEGOTIATE_TYPE">
+                                                            #{msg.REFDATA_PAGE_NEGOTIATE_TYPES}
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=NEGOTIATE_STATUS">
+                                                            #{msg.REFDATA_PAGE_NEGOTIATE_STATUSS}
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#{request.contextPath}/refdata/ChecklistItem.xhtml">
+                                                            #{msg.REFDATA_PAGE_CHECKLIST_ITEMS}
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#{request.contextPath}/refdata/ChecklistGroup.xhtml">
+                                                            #{msg.REFDATA_PAGE_CHECKLIST_GROUPS}
+                                                        </a>
+                                                    </li>
+                                                </ui:fragment>
                                             </ul>
                                         </li>
                                     </ui:fragment>
@@ -93,6 +135,16 @@
                                                         #{msg.REFDATA_PAGE_RRR_TYPES}
                                                     </a>
                                                 </li>
+                                                <ui:fragment rendered="#{systemBean.isSolaStateLand}">
+                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=NOTATION_STATUS_TYPE">
+                                                            #{msg.REFDATA_PAGE_NOTATION_STATUS_TYPES}
+                                                        </a>
+                                                    </li>
+                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=VALUATION_TYPE">
+                                                            #{msg.REFDATA_PAGE_VALUATION_TYPES}
+                                                        </a>
+                                                    </li>
+                                                </ui:fragment>
                                             </ul>
                                         </li>
                                     </ui:fragment>

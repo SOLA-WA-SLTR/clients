@@ -20,6 +20,7 @@ import org.sola.services.common.repository.entities.AbstractCodeEntity;
 import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
 import org.sola.services.ejb.refdata.entities.ConfigPanelLauncher;
 import org.sola.services.ejb.refdata.entities.RequestCategoryType;
+import org.sola.services.ejb.refdata.entities.RequestDisplayGroup;
 import org.sola.services.ejb.refdata.entities.RequestType;
 import org.sola.services.ejb.refdata.entities.RequestTypeRequiresSourceType;
 import org.sola.services.ejb.refdata.entities.RrrType;
@@ -40,6 +41,7 @@ public class RequestTypePageBean extends AbstractBackingBean {
     private RrrType[] rrrTypes;
     private TypeAction[] typeActions;
     private SourceType[] sourceTypes;
+    private RequestDisplayGroup[] displayGroups;
     private String[] selectedSourceCodes;
     
     @Inject
@@ -53,7 +55,6 @@ public class RequestTypePageBean extends AbstractBackingBean {
 
     LocalizedValuesListBean localizedDisplayValues;
     LocalizedValuesListBean localizedDescriptionValues;
-    LocalizedValuesListBean localizedDisplayGroupValues;
 
     @EJB
     RefDataEJBLocal refEjb;
@@ -64,6 +65,10 @@ public class RequestTypePageBean extends AbstractBackingBean {
 
     public void setSelectedSourceCodes(String[] selectedSourceCodes) {
         this.selectedSourceCodes = selectedSourceCodes;
+    }
+
+    public RequestDisplayGroup[] getDisplayGroups() {
+        return displayGroups;
     }
 
     public RequestType getRequestType() {
@@ -106,10 +111,6 @@ public class RequestTypePageBean extends AbstractBackingBean {
         return localizedDescriptionValues;
     }
 
-    public LocalizedValuesListBean getLocalizedDisplayGroupValues() {
-        return localizedDisplayGroupValues;
-    }
-
     @PostConstruct
     private void init() {
         loadList();
@@ -119,11 +120,21 @@ public class RequestTypePageBean extends AbstractBackingBean {
         List<ConfigPanelLauncher> configPanelLauncherList = refEjb.getCodeEntityList(ConfigPanelLauncher.class, languageBean.getLocale());
         List<TypeAction> typeActionList = refEjb.getCodeEntityList(TypeAction.class, languageBean.getLocale());
         List<SourceType> sourceTypeList = refEjb.getCodeEntityList(SourceType.class, languageBean.getLocale());
-
+        List<RequestDisplayGroup> displayGroupList = refEjb.getCodeEntityList(RequestDisplayGroup.class, languageBean.getLocale());
+        
         if (sourceTypeList != null) {
             sourceTypes = sourceTypeList.toArray(new SourceType[sourceTypeList.size()]);
         }
-
+        
+        if (displayGroupList != null) {
+            // Add dummy
+            RequestDisplayGroup dummy = new RequestDisplayGroup();
+            dummy.setCode("");
+            dummy.setDisplayValue(" ");
+            displayGroupList.add(0, dummy);
+            displayGroups = displayGroupList.toArray(new RequestDisplayGroup[displayGroupList.size()]);
+        }
+        
         if (requestCategoryTypeList != null) {
             // Add dummy
             RequestCategoryType dummy = new RequestCategoryType();
@@ -194,6 +205,17 @@ public class RequestTypePageBean extends AbstractBackingBean {
         return "";
     }
 
+    public String getDisplayGroupName(String code) {
+        if (code != null && displayGroups != null) {
+            for (RequestDisplayGroup item : displayGroups) {
+                if (item.getCode().equalsIgnoreCase(code)) {
+                    return item.getDisplayValue();
+                }
+            }
+        }
+        return "";
+    }
+    
     public String getPanelLauncherName(String code) {
         if (code != null && configPanelLaunchers != null) {
             for (ConfigPanelLauncher item : configPanelLaunchers) {
@@ -256,11 +278,9 @@ public class RequestTypePageBean extends AbstractBackingBean {
 
         localizedDisplayValues = new LocalizedValuesListBean(languageBean);
         localizedDescriptionValues = new LocalizedValuesListBean(languageBean);
-        localizedDisplayGroupValues = new LocalizedValuesListBean(languageBean);
         
         localizedDisplayValues.loadLocalizedValues(requestType.getDisplayValue());
         localizedDescriptionValues.loadLocalizedValues(requestType.getDescription());
-        localizedDisplayGroupValues.loadLocalizedValues(requestType.getDisplayGroupName());
     }
 
     public void deleteEntity(AbstractCodeEntity entity) {
@@ -293,7 +313,6 @@ public class RequestTypePageBean extends AbstractBackingBean {
 
             requestType.setDisplayValue(localizedDisplayValues.buildMultilingualString());
             requestType.setDescription(localizedDescriptionValues.buildMultilingualString());
-            requestType.setDisplayGroupName(localizedDisplayGroupValues.buildMultilingualString());
 
             // Prepare source types related to request type
             // Delete

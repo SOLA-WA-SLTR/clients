@@ -19,6 +19,7 @@ import org.sola.services.common.EntityAction;
 import org.sola.services.common.repository.entities.AbstractCodeEntity;
 import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
 import org.sola.services.ejb.refdata.entities.ApplicationStatusType;
+import org.sola.services.ejb.refdata.entities.Authority;
 import org.sola.services.ejb.refdata.entities.AvailabilityStatus;
 import org.sola.services.ejb.refdata.entities.BaUnitRelType;
 import org.sola.services.ejb.refdata.entities.BaUnitType;
@@ -39,19 +40,28 @@ import org.sola.services.ejb.refdata.entities.IdType;
 import org.sola.services.ejb.refdata.entities.LandUseType;
 import org.sola.services.ejb.refdata.entities.MapLayerType;
 import org.sola.services.ejb.refdata.entities.MortgageType;
+import org.sola.services.ejb.refdata.entities.NegotiateStatus;
+import org.sola.services.ejb.refdata.entities.NegotiateType;
+import org.sola.services.ejb.refdata.entities.NotationStatusType;
+import org.sola.services.ejb.refdata.entities.NotifyRelationshipType;
+import org.sola.services.ejb.refdata.entities.ObjectionStatus;
 import org.sola.services.ejb.refdata.entities.PanelLauncherGroup;
 import org.sola.services.ejb.refdata.entities.PartyRoleType;
 import org.sola.services.ejb.refdata.entities.PartyType;
 import org.sola.services.ejb.refdata.entities.PresentationFormType;
+import org.sola.services.ejb.refdata.entities.PublicDisplayStatus;
+import org.sola.services.ejb.refdata.entities.PublicDisplayType;
 import org.sola.services.ejb.refdata.entities.RegistrationStatusType;
 import org.sola.services.ejb.refdata.entities.RejectionReason;
 import org.sola.services.ejb.refdata.entities.RequestCategoryType;
+import org.sola.services.ejb.refdata.entities.RequestDisplayGroup;
 import org.sola.services.ejb.refdata.entities.Role;
 import org.sola.services.ejb.refdata.entities.RrrGroupType;
 import org.sola.services.ejb.refdata.entities.ServiceActionType;
 import org.sola.services.ejb.refdata.entities.ServiceStatusType;
 import org.sola.services.ejb.refdata.entities.TransactionStatusType;
 import org.sola.services.ejb.refdata.entities.TypeAction;
+import org.sola.services.ejb.refdata.entities.ValuationType;
 
 /**
  * Generic reference data class to manage various reference data tables
@@ -198,7 +208,27 @@ public class RefDataPage extends AbstractBackingBean {
             refClass = ConfigPanelLauncher.class;
         } else if (type.equalsIgnoreCase("MAP_LAYER_TYPE")){
             refClass = MapLayerType.class;
-        }
+        } else if (type.equalsIgnoreCase("NOTATION_STATUS_TYPE")){
+            refClass = NotationStatusType.class;
+        } else if (type.equalsIgnoreCase("VALUATION_TYPE")){
+            refClass = ValuationType.class;
+        } else if (type.equalsIgnoreCase("REQUEST_DISPLAY_GROUP")){
+            refClass = RequestDisplayGroup.class;
+        } else if (type.equalsIgnoreCase("PUBLIC_DISPLAY_TYPE")){
+            refClass = PublicDisplayType.class;
+        } else if (type.equalsIgnoreCase("PUBLIC_DISPLAY_STATUS")){
+            refClass = PublicDisplayStatus.class;
+        } else if (type.equalsIgnoreCase("AUTHORITY")){
+            refClass = Authority.class;
+        } else if (type.equalsIgnoreCase("OBJECTION_STATUS")){
+            refClass = ObjectionStatus.class;
+        } else if (type.equalsIgnoreCase("NOTIFY_RELATIONSHIP_TYPE")){
+            refClass = NotifyRelationshipType.class;
+        } else if (type.equalsIgnoreCase("NEGOTIATE_TYPE")){
+            refClass = NegotiateType.class;
+        } else if (type.equalsIgnoreCase("NEGOTIATE_STATUS")){
+            refClass = NegotiateStatus.class;
+        }      
 
         itemsHeader = msgProvider.getMessage(headerPrefix + type.toUpperCase() + "S");
         itemHeader = msgProvider.getMessage(headerPrefix + type.toUpperCase());
