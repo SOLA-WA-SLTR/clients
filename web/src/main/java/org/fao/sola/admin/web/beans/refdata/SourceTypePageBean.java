@@ -16,8 +16,8 @@ import org.sola.common.StringUtility;
 import org.sola.common.logging.LogUtility;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.repository.entities.AbstractCodeEntity;
-import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
-import org.sola.services.ejb.refdata.entities.SourceType;
+import org.sola.admin.services.ejb.refdata.businesslogic.RefDataAdminEJBLocal;
+import org.sola.admin.services.ejb.refdata.entities.SourceType;
 
 /**
  * Contains methods and properties to manage {@link SourceType}
@@ -41,7 +41,7 @@ public class SourceTypePageBean extends AbstractBackingBean {
     LocalizedValuesListBean localizedDescriptionValues;
 
     @EJB
-    RefDataEJBLocal refEjb;
+    RefDataAdminEJBLocal refEjb;
 
     public SourceType getSourceType() {
         return sourceType;

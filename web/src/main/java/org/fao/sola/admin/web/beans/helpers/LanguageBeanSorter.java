@@ -28,7 +28,7 @@
 package org.fao.sola.admin.web.beans.helpers;
 
 import java.util.Comparator;
-import org.sola.services.ejb.refdata.entities.Language;
+import org.sola.admin.services.ejb.refdata.entities.Language;
 
 /**
  * Allows to sort array of {@link Language} entity by item order.

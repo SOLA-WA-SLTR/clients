@@ -259,4 +259,9 @@ public class ErrorKeys {
     public static final String LAYERS_PAGE_FILL_STYLE = "LAYERS_PAGE_FILL_STYLE";
     /** - Fill in shape location */
     public static final String LAYERS_PAGE_FILL_SHAPE_LOCATION = "LAYERS_PAGE_FILL_SHAPE_LOCATION";
+    
+    // Cache
+    
+    /** Cache has not been reset. CacheEJB may not be found */
+    public static final String RESET_CACHE_PAGE_FAILED = "RESET_CACHE_PAGE_FAILED";
 }

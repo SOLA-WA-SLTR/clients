@@ -10,8 +10,8 @@ import org.fao.sola.admin.web.beans.helpers.MessageBean;
 import org.fao.sola.admin.web.beans.helpers.MessageProvider;
 import org.fao.sola.admin.web.beans.language.LanguageBean;
 import org.sola.services.common.EntityAction;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejb.system.repository.entities.EmailTask;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejb.system.repository.entities.EmailTask;
 
 /**
  * Contains methods to manage mail messages queue
@@ -21,7 +21,7 @@ import org.sola.services.ejb.system.repository.entities.EmailTask;
 public class MailQueuePageBean extends AbstractBackingBean {
 
     @EJB
-    SystemEJBLocal systemEjb;
+    SystemAdminEJBLocal systemEjb;
 
     @Inject
     MessageProvider msgProvider;

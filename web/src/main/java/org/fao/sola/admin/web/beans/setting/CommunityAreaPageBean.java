@@ -14,10 +14,10 @@ import org.fao.sola.admin.web.beans.helpers.MessagesKeys;
 import org.fao.sola.admin.web.beans.language.LanguageBean;
 import org.sola.common.ConfigConstants;
 import org.sola.common.StringUtility;
-import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
-import org.sola.services.ejb.search.repository.entities.ConfigMapLayer;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejb.system.repository.entities.Setting;
+import org.sola.admin.services.ejb.search.businesslogic.SearchAdminEJBLocal;
+import org.sola.admin.services.ejb.search.repository.entities.ConfigMapLayer;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejb.system.repository.entities.Setting;
 
 /**
  * Contains methods and properties to manage {@link Setting}
@@ -27,7 +27,7 @@ import org.sola.services.ejb.system.repository.entities.Setting;
 public class CommunityAreaPageBean extends AbstractBackingBean {
 
     @EJB
-    SearchEJBLocal searchEjb;
+    SearchAdminEJBLocal searchEjb;
 
     @Inject
     LanguageBean langBean;
@@ -36,7 +36,7 @@ public class CommunityAreaPageBean extends AbstractBackingBean {
     MessageProvider msgProvider;
 
     @EJB
-    SystemEJBLocal systemEjb;
+    SystemAdminEJBLocal systemEjb;
     
     @Inject
     MessageBean msgBean;

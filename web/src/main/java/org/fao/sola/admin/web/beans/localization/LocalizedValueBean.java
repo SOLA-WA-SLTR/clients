@@ -27,7 +27,7 @@
  */
 package org.fao.sola.admin.web.beans.localization;
 
-import org.sola.services.ejb.refdata.entities.Language;
+import org.sola.admin.services.ejb.refdata.entities.Language;
 
 /**
  * Represents localized value from multilingual string;

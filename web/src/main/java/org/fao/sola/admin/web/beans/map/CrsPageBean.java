@@ -10,8 +10,8 @@ import org.fao.sola.admin.web.beans.AbstractBackingBean;
 import org.fao.sola.admin.web.beans.helpers.MessageBean;
 import org.fao.sola.admin.web.beans.helpers.MessageProvider;
 import org.sola.services.common.EntityAction;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejb.system.repository.entities.Crs;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejb.system.repository.entities.Crs;
 
 /**
  * Contains methods and properties to manage {@link Crs}
@@ -29,7 +29,7 @@ public class CrsPageBean extends AbstractBackingBean {
     MessageProvider msgProvider;
 
     @EJB
-    SystemEJBLocal systemEjb;
+    SystemAdminEJBLocal systemEjb;
 
     public Crs getCrs() {
         return crs;

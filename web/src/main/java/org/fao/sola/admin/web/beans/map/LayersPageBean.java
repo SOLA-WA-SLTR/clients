@@ -15,12 +15,12 @@ import org.fao.sola.admin.web.beans.localization.LocalizedValuesListBean;
 import org.sola.common.StringUtility;
 import org.sola.common.mapping.MappingManager;
 import org.sola.services.common.EntityAction;
-import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
-import org.sola.services.ejb.refdata.entities.MapLayerType;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejb.system.repository.entities.ConfigMapLayer;
-import org.sola.services.ejb.system.repository.entities.ConfigMapLayerMetadata;
-import org.sola.services.ejb.system.repository.entities.Query;
+import org.sola.admin.services.ejb.refdata.businesslogic.RefDataAdminEJBLocal;
+import org.sola.admin.services.ejb.refdata.entities.MapLayerType;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejb.system.repository.entities.ConfigMapLayer;
+import org.sola.admin.services.ejb.system.repository.entities.ConfigMapLayerMetadata;
+import org.sola.admin.services.ejb.system.repository.entities.Query;
 
 /**
  * Contains methods and properties to manage {@link ConfigMapLayer}
@@ -42,10 +42,10 @@ public class LayersPageBean extends AbstractBackingBean {
     private MessageProvider msgProvider;
 
     @EJB
-    private SystemEJBLocal systemEjb;
+    private SystemAdminEJBLocal systemEjb;
     
     @EJB
-    private RefDataEJBLocal refEjb;
+    private RefDataAdminEJBLocal refEjb;
 
     public ConfigMapLayer getLayer() {
         return layer;

@@ -14,12 +14,12 @@ import org.fao.sola.admin.web.beans.helpers.MessageProvider;
 import org.fao.sola.admin.web.beans.language.LanguageBean;
 import org.sola.common.StringUtility;
 import org.sola.services.common.EntityAction;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Group;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.GroupRole;
-import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
-import org.sola.services.ejb.refdata.entities.Role;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejbs.admin.businesslogic.AdministratorEJBLocal;
+import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.Group;
+import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.GroupRole;
+import org.sola.admin.services.ejb.refdata.businesslogic.RefDataAdminEJBLocal;
+import org.sola.admin.services.ejb.refdata.entities.Role;
 
 /**
  * Contains methods and properties to manage {@link Group}
@@ -39,13 +39,13 @@ public class GroupPageBean extends AbstractBackingBean {
     private LanguageBean languageBean;
     
     @EJB
-    RefDataEJBLocal refEjb;
+    RefDataAdminEJBLocal refEjb;
     
     @EJB
-    SystemEJBLocal systemEjb;
+    SystemAdminEJBLocal systemEjb;
     
     @EJB
-    AdminEJBLocal adminEjb;
+    AdministratorEJBLocal adminEjb;
 
     public Group getGroup() {
         return group;

@@ -20,15 +20,15 @@ import org.fao.sola.admin.web.beans.AbstractBackingBean;
 import org.fao.sola.admin.web.beans.helpers.LanguageBeanSorter;
 import org.fao.sola.admin.web.beans.helpers.MessageProvider;
 import org.sola.common.StringUtility;
-import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
-import org.sola.services.ejb.refdata.entities.Language;
+import org.sola.admin.services.ejb.refdata.businesslogic.RefDataAdminEJBLocal;
+import org.sola.admin.services.ejb.refdata.entities.Language;
 
 @Named
 @SessionScoped
 public class LanguageBean extends AbstractBackingBean {
 
     @EJB
-    RefDataEJBLocal refDataEjb;
+    RefDataAdminEJBLocal refDataEjb;
 
     @Inject
     MessageProvider msgProvider;

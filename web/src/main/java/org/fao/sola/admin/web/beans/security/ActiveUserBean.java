@@ -5,7 +5,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
+import org.sola.admin.services.ejbs.admin.businesslogic.AdministratorEJBLocal;
 
 /**
  * Stores user information
@@ -15,7 +15,7 @@ import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 public class ActiveUserBean implements Serializable {
 
     @EJB
-    AdminEJBLocal adminEjb;
+    AdministratorEJBLocal adminEjb;
     
     private String username;
     private String password;

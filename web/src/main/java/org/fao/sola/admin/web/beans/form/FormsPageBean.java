@@ -17,17 +17,17 @@ import org.fao.sola.admin.web.beans.language.LanguageBean;
 import org.fao.sola.admin.web.beans.localization.LocalizedValuesListBean;
 import org.sola.common.StringUtility;
 import org.sola.common.mapping.MappingManager;
-import org.sola.opentenure.services.ejbs.claim.businesslogic.ClaimEJBLocal;
-import org.sola.opentenure.services.ejbs.claim.entities.FieldConstraint;
-import org.sola.opentenure.services.ejbs.claim.entities.FieldConstraintOption;
-import org.sola.opentenure.services.ejbs.claim.entities.FieldTemplate;
-import org.sola.opentenure.services.ejbs.claim.entities.FormTemplate;
-import org.sola.opentenure.services.ejbs.claim.entities.SectionTemplate;
+import org.sola.admin.opentenure.services.ejbs.claim.businesslogic.ClaimAdminEJBLocal;
+import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldConstraint;
+import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldConstraintOption;
+import org.sola.admin.opentenure.services.ejbs.claim.entities.FieldTemplate;
+import org.sola.admin.opentenure.services.ejbs.claim.entities.FormTemplate;
+import org.sola.admin.opentenure.services.ejbs.claim.entities.SectionTemplate;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.logging.LogUtility;
-import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
-import org.sola.services.ejb.refdata.entities.FieldConstraintType;
-import org.sola.services.ejb.refdata.entities.FieldType;
+import org.sola.admin.services.ejb.refdata.businesslogic.RefDataAdminEJBLocal;
+import org.sola.admin.services.ejb.refdata.entities.FieldConstraintType;
+import org.sola.admin.services.ejb.refdata.entities.FieldType;
 
 /**
  * Contains methods to manage dynamic forms
@@ -40,10 +40,10 @@ public class FormsPageBean extends AbstractBackingBean {
     MessageProvider msgProvider;
 
     @EJB
-    RefDataEJBLocal refEjb;
+    RefDataAdminEJBLocal refEjb;
     
     @EJB
-    ClaimEJBLocal claimEjb;
+    ClaimAdminEJBLocal claimEjb;
 
     @Inject
     private LanguageBean languageBean;

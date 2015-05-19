@@ -14,8 +14,8 @@ import org.fao.sola.admin.web.beans.localization.LocalizedValuesListBean;
 import org.sola.common.StringUtility;
 import org.sola.common.logging.LogUtility;
 import org.sola.services.common.EntityAction;
-import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
-import org.sola.services.ejb.refdata.entities.Language;
+import org.sola.admin.services.ejb.refdata.businesslogic.RefDataAdminEJBLocal;
+import org.sola.admin.services.ejb.refdata.entities.Language;
 
 /**
  * Contains methods and properties to manage {@link Language}
@@ -38,7 +38,7 @@ public class LanguagePageBean extends AbstractBackingBean {
     LocalizedValuesListBean localizedDisplayValues;
 
     @EJB
-    RefDataEJBLocal refEjb;
+    RefDataAdminEJBLocal refEjb;
 
     public Language getLanguage() {
         return language;

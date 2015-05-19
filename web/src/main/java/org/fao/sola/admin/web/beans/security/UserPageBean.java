@@ -15,13 +15,13 @@ import org.fao.sola.admin.web.beans.helpers.ErrorKeys;
 import org.fao.sola.admin.web.beans.helpers.MessageProvider;
 import org.sola.common.StringUtility;
 import org.sola.services.common.EntityAction;
-import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
-import org.sola.services.ejb.search.repository.entities.UserSearchParams;
-import org.sola.services.ejb.search.repository.entities.UserSearchResult;
-import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.Group;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.User;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.UserGroup;
+import org.sola.admin.services.ejb.search.businesslogic.SearchAdminEJBLocal;
+import org.sola.admin.services.ejb.search.repository.entities.UserSearchParams;
+import org.sola.admin.services.ejb.search.repository.entities.UserSearchResult;
+import org.sola.admin.services.ejbs.admin.businesslogic.AdministratorEJBLocal;
+import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.Group;
+import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.User;
+import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.UserGroup;
 
 /**
  * Contains methods and properties to manage {@link Group}
@@ -43,10 +43,10 @@ public class UserPageBean extends AbstractBackingBean {
     MessageProvider msgProvider;
 
     @EJB
-    AdminEJBLocal adminEjb;
+    AdministratorEJBLocal adminEjb;
 
     @EJB
-    SearchEJBLocal searchEjb;
+    SearchAdminEJBLocal searchEjb;
 
     public User getUser() {
         return user;

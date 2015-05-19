@@ -21,19 +21,19 @@ import org.sola.common.StringUtility;
 import org.sola.common.mapping.MappingManager;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.repository.entities.AbstractCodeEntity;
-import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
-import org.sola.services.ejb.refdata.entities.ApplicationActionType;
-import org.sola.services.ejb.refdata.entities.BrSeverityType;
-import org.sola.services.ejb.refdata.entities.BrTechnicalType;
-import org.sola.services.ejb.refdata.entities.BrValidationTargetType;
-import org.sola.services.ejb.refdata.entities.RegistrationStatusType;
-import org.sola.services.ejb.refdata.entities.RequestType;
-import org.sola.services.ejb.refdata.entities.RrrType;
-import org.sola.services.ejb.refdata.entities.ServiceActionType;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejb.system.repository.entities.Br;
-import org.sola.services.ejb.system.repository.entities.BrDefinition;
-import org.sola.services.ejb.system.repository.entities.BrValidation;
+import org.sola.admin.services.ejb.refdata.businesslogic.RefDataAdminEJBLocal;
+import org.sola.admin.services.ejb.refdata.entities.ApplicationActionType;
+import org.sola.admin.services.ejb.refdata.entities.BrSeverityType;
+import org.sola.admin.services.ejb.refdata.entities.BrTechnicalType;
+import org.sola.admin.services.ejb.refdata.entities.BrValidationTargetType;
+import org.sola.admin.services.ejb.refdata.entities.RegistrationStatusType;
+import org.sola.admin.services.ejb.refdata.entities.RequestType;
+import org.sola.admin.services.ejb.refdata.entities.RrrType;
+import org.sola.admin.services.ejb.refdata.entities.ServiceActionType;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejb.system.repository.entities.Br;
+import org.sola.admin.services.ejb.system.repository.entities.BrDefinition;
+import org.sola.admin.services.ejb.system.repository.entities.BrValidation;
 
 /**
  * Contains methods and properties to manage {@link Br}
@@ -56,10 +56,10 @@ public class BrPageBean extends AbstractBackingBean {
     LocalizedValuesListBean localizedFeedback;
 
     @EJB
-    private SystemEJBLocal systemEjb;
+    private SystemAdminEJBLocal systemEjb;
 
     @EJB
-    private RefDataEJBLocal refEjb;
+    private RefDataAdminEJBLocal refEjb;
 
     @Inject
     private LanguageBean langBean;

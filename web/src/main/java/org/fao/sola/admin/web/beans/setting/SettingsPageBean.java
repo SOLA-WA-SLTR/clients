@@ -13,9 +13,9 @@ import org.fao.sola.admin.web.beans.helpers.MessageProvider;
 import org.sola.common.ConfigConstants;
 import org.sola.common.StringUtility;
 import org.sola.services.common.EntityAction;
-import org.sola.services.ejb.scheduler.businesslogic.MailerLocal;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejb.system.repository.entities.Setting;
+import org.sola.admin.services.ejb.scheduler.businesslogic.MailerAdminLocal;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejb.system.repository.entities.Setting;
 
 /**
  * Contains methods and properties to manage {@link Setting}
@@ -33,10 +33,10 @@ public class SettingsPageBean extends AbstractBackingBean {
     MessageProvider msgProvider;
 
     @EJB
-    SystemEJBLocal systemEjb;
+    SystemAdminEJBLocal systemEjb;
     
     @EJB
-    MailerLocal mailer;
+    MailerAdminLocal mailer;
     
     public Setting getSetting() {
         return setting;

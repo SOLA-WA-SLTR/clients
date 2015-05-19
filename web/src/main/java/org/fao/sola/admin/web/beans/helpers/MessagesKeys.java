@@ -95,4 +95,9 @@ public class MessagesKeys {
     
     /** Business rule has been saved */
     public static final String BR_PAGE_BR_SAVED = "BR_PAGE_BR_SAVED";
+    
+    // Cache
+    
+    /** Cache has been reset successfully */
+    public static final String RESET_CACHE_PAGE_SUCCESS = "RESET_CACHE_PAGE_SUCCESS";
 }

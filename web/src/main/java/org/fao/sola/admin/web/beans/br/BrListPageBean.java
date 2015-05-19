@@ -9,14 +9,14 @@ import javax.inject.Named;
 import org.fao.sola.admin.web.beans.AbstractBackingBean;
 import org.fao.sola.admin.web.beans.language.LanguageBean;
 import org.sola.services.common.LocalInfo;
-import org.sola.services.ejb.search.businesslogic.SearchEJBLocal;
-import org.sola.services.ejb.search.repository.entities.BrSearchParams;
-import org.sola.services.ejb.search.repository.entities.BrSearchResult;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejb.system.repository.entities.Br;
-import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
-import org.sola.services.ejb.refdata.entities.BrTechnicalType;
-import org.sola.services.ejb.refdata.entities.BrValidationTargetType;
+import org.sola.admin.services.ejb.search.businesslogic.SearchAdminEJBLocal;
+import org.sola.admin.services.ejb.search.repository.entities.BrSearchParams;
+import org.sola.admin.services.ejb.search.repository.entities.BrSearchResult;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejb.system.repository.entities.Br;
+import org.sola.admin.services.ejb.refdata.businesslogic.RefDataAdminEJBLocal;
+import org.sola.admin.services.ejb.refdata.entities.BrTechnicalType;
+import org.sola.admin.services.ejb.refdata.entities.BrValidationTargetType;
 
 /**
  * Contains methods and properties to manage {@link Br}s
@@ -31,13 +31,13 @@ public class BrListPageBean extends AbstractBackingBean {
     private BrSearchParams searchParams;
 
     @EJB
-    private SearchEJBLocal searchEjb;
+    private SearchAdminEJBLocal searchEjb;
 
     @EJB
-    private SystemEJBLocal systemEjb;
+    private SystemAdminEJBLocal systemEjb;
 
     @EJB
-    RefDataEJBLocal refEjb;
+    RefDataAdminEJBLocal refEjb;
 
     @Inject
     private LanguageBean langBean;

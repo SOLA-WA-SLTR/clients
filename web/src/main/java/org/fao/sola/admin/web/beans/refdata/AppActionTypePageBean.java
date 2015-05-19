@@ -16,9 +16,9 @@ import org.sola.common.StringUtility;
 import org.sola.common.logging.LogUtility;
 import org.sola.services.common.EntityAction;
 import org.sola.services.common.repository.entities.AbstractCodeEntity;
-import org.sola.services.ejb.refdata.businesslogic.RefDataEJBLocal;
-import org.sola.services.ejb.refdata.entities.ApplicationActionType;
-import org.sola.services.ejb.refdata.entities.ApplicationStatusType;
+import org.sola.admin.services.ejb.refdata.businesslogic.RefDataAdminEJBLocal;
+import org.sola.admin.services.ejb.refdata.entities.ApplicationActionType;
+import org.sola.admin.services.ejb.refdata.entities.ApplicationStatusType;
 
 /**
  * Contains methods and properties to manage {@link ApplicationActionType}
@@ -40,7 +40,7 @@ public class AppActionTypePageBean extends AbstractBackingBean {
     LocalizedValuesListBean localizedDescriptionValues;
 
     @EJB
-    RefDataEJBLocal refEjb;
+    RefDataAdminEJBLocal refEjb;
 
     public ApplicationActionType getAppActionType() {
         return appActionType;

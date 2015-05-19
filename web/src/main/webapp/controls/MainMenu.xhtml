@@ -107,10 +107,9 @@
                                             </ul>
                                         </li>
                                     </ui:fragment>
-                                    
-                                    <ui:fragment rendered="#{not systemBean.isSolaCommunityServer}">
-                                        <li><a href="#">#{msg.MAIN_MENU_ADMINISTRATIVE}</a>
-                                            <ul class="dropdown-menu">
+                                    <li><a href="#">#{msg.MAIN_MENU_ADMINISTRATIVE}</a>
+                                        <ul class="dropdown-menu">
+                                            <ui:fragment rendered="#{not systemBean.isSolaCommunityServer}">
                                                 <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=ba_unit_type">
                                                         #{msg.REFDATA_PAGE_BA_UNIT_TYPES}
                                                     </a>
@@ -131,24 +130,23 @@
                                                         #{msg.REFDATA_PAGE_RRR_GROUP_TYPES}
                                                     </a>
                                                 </li>
-                                                <li><a href="#{request.contextPath}/refdata/RrrType.xhtml">
-                                                        #{msg.REFDATA_PAGE_RRR_TYPES}
+                                            </ui:fragment>
+                                            <li><a href="#{request.contextPath}/refdata/RrrType.xhtml">
+                                                    #{msg.REFDATA_PAGE_RRR_TYPES}
+                                                </a>
+                                            </li>
+                                            <ui:fragment rendered="#{systemBean.isSolaStateLand}">
+                                                <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=NOTATION_STATUS_TYPE">
+                                                        #{msg.REFDATA_PAGE_NOTATION_STATUS_TYPES}
                                                     </a>
                                                 </li>
-                                                <ui:fragment rendered="#{systemBean.isSolaStateLand}">
-                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=NOTATION_STATUS_TYPE">
-                                                            #{msg.REFDATA_PAGE_NOTATION_STATUS_TYPES}
-                                                        </a>
-                                                    </li>
-                                                    <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=VALUATION_TYPE">
-                                                            #{msg.REFDATA_PAGE_VALUATION_TYPES}
-                                                        </a>
-                                                    </li>
-                                                </ui:fragment>
-                                            </ul>
-                                        </li>
-                                    </ui:fragment>
-                                    
+                                                <li><a href="#{request.contextPath}/refdata/RefData.xhtml?type=VALUATION_TYPE">
+                                                        #{msg.REFDATA_PAGE_VALUATION_TYPES}
+                                                    </a>
+                                                </li>
+                                            </ui:fragment>
+                                        </ul>
+                                    </li>
                                     <li><a href="#">#{msg.MAIN_MENU_SOURCE}</a>
                                         <ul class="dropdown-menu">
                                             <li><a href="#{request.contextPath}/refdata/SourceType.xhtml">
@@ -377,9 +375,17 @@
                                     </li>
                                 </ul>
                             </li>
-                        </c:if>
-                        <c:if test="#{not activeUserBean.hasAdminRights}">
-                            <li><a href="#"> </a></li>
+                            <li>
+                                <a href="#">
+                                    <i class="glyphicon glyphicon-hdd"></i> #{msg.MAIN_MENU_CACHE}
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#{request.contextPath}/cache/CacheReset.xhtml">
+                                            <i class="glyphicon glyphicon-refresh"></i> #{msg.MAIN_MENU_CACHE_RESET}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
                         </c:if>
                     </ul>
                 </div>

@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 import org.fao.sola.admin.web.beans.helpers.ErrorKeys;
 import org.fao.sola.admin.web.beans.language.LanguageBean;
 import org.sola.common.StringUtility;
-import org.sola.services.ejb.refdata.entities.Language;
+import org.sola.admin.services.ejb.refdata.entities.Language;
 
 /**
  * Helps to manage strings, holding multilingual values. Intensively used in

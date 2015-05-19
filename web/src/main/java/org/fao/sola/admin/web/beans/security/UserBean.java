@@ -3,11 +3,11 @@ package org.fao.sola.admin.web.beans.security;
 import java.io.Serializable;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
-import org.sola.services.ejbs.admin.businesslogic.repository.entities.User;
+import org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.User;
 
 /**
  * Wrapper user bean, exposing properties of
- * {@link org.sola.services.ejbs.admin.businesslogic.repository.entities.User} 
+ * {@link org.sola.admin.services.ejbs.admin.businesslogic.repository.entities.User} 
  * and some other supplementary properties 
  */
 @Named

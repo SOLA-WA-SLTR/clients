@@ -15,9 +15,9 @@ import org.fao.sola.admin.web.beans.localization.LocalizedValuesListBean;
 import org.sola.common.StringUtility;
 import org.sola.common.mapping.MappingManager;
 import org.sola.services.common.EntityAction;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejb.system.repository.entities.Query;
-import org.sola.services.ejb.system.repository.entities.QueryField;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejb.system.repository.entities.Query;
+import org.sola.admin.services.ejb.system.repository.entities.QueryField;
 
 /**
  * Contains methods and properties to manage {@link Query}
@@ -38,7 +38,7 @@ public class QueryPageBean extends AbstractBackingBean {
     private MessageProvider msgProvider;
 
     @EJB
-    private SystemEJBLocal systemEjb;
+    private SystemAdminEJBLocal systemEjb;
 
     public Query getQuery() {
         return query;

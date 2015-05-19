@@ -13,7 +13,7 @@ import javax.inject.Named;
 import org.fao.sola.admin.web.beans.helpers.ErrorKeys;
 import org.fao.sola.admin.web.beans.helpers.MessageProvider;
 import org.fao.sola.admin.web.beans.system.SystemBean;
-import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
+import org.sola.admin.services.ejbs.admin.businesslogic.AdministratorEJBLocal;
 
 @Named
 @RequestScoped
@@ -29,7 +29,7 @@ public class LoginBean implements Serializable {
     ActiveUserBean activeUserBean;
     
     @EJB
-    AdminEJBLocal admin;
+    AdministratorEJBLocal admin;
        
     public ActiveUserBean getActiveUserBean(){
         return activeUserBean;

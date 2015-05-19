@@ -11,8 +11,8 @@ import org.fao.sola.admin.web.beans.helpers.MessagesKeys;
 import org.sola.common.ConfigConstants;
 import org.sola.common.RolesConstants;
 import org.sola.common.StringUtility;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejb.system.repository.entities.DbInfo;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejb.system.repository.entities.DbInfo;
 
 /**
  * Contains methods and properties related to system settings
@@ -27,7 +27,7 @@ public class SystemBean extends AbstractBackingBean {
     MessageProvider msgProvider;
     
     @EJB
-    SystemEJBLocal systemEjb;
+    SystemAdminEJBLocal systemEjb;
 
     public DbInfo getDbInfo() {
         return dbInfo;

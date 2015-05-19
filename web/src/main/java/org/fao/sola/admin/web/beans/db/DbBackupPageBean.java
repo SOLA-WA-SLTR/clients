@@ -30,8 +30,8 @@ import org.sola.common.DateUtility;
 import org.sola.common.FileUtility;
 import org.sola.common.StringUtility;
 import org.sola.services.common.logging.LogUtility;
-import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
-import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
+import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
+import org.sola.admin.services.ejbs.admin.businesslogic.AdministratorEJBLocal;
 
 /**
  * Contains properties and methods to manage database backups
@@ -41,10 +41,10 @@ import org.sola.services.ejbs.admin.businesslogic.AdminEJBLocal;
 public class DbBackupPageBean extends AbstractBackingBean {
 
     @EJB
-    SystemEJBLocal systemEjb;
+    SystemAdminEJBLocal systemEjb;
 
     @EJB
-    AdminEJBLocal adminEjb;
+    AdministratorEJBLocal adminEjb;
 
     @Inject
     MessageProvider msgProvider;

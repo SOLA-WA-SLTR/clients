@@ -11,8 +11,8 @@ import org.fao.sola.admin.web.beans.AbstractBackingBean;
 import org.fao.sola.admin.web.beans.helpers.ErrorKeys;
 import org.fao.sola.admin.web.beans.helpers.MessageProvider;
 import org.fao.sola.admin.web.beans.language.LanguageBean;
-import org.sola.opentenure.services.ejbs.claim.businesslogic.ClaimEJBLocal;
-import org.sola.opentenure.services.ejbs.claim.entities.FormTemplate;
+import org.sola.admin.opentenure.services.ejbs.claim.businesslogic.ClaimAdminEJBLocal;
+import org.sola.admin.opentenure.services.ejbs.claim.entities.FormTemplate;
 import org.sola.services.common.EntityAction;
 
 /**
@@ -23,7 +23,7 @@ import org.sola.services.common.EntityAction;
 public class FormsListBean extends AbstractBackingBean {
 
     @EJB
-    ClaimEJBLocal claimEjb;
+    ClaimAdminEJBLocal claimEjb;
 
     @Inject
     LanguageBean langBean;
