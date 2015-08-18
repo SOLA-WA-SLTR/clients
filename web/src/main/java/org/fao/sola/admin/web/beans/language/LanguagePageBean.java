@@ -34,7 +34,7 @@ public class LanguagePageBean extends AbstractBackingBean {
 
     @Inject
     private LanguageBean languageBean;
-    
+
     LocalizedValuesListBean localizedDisplayValues;
 
     @EJB

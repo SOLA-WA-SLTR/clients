@@ -104,6 +104,22 @@ public class ErrorKeys {
      * Add at least 1 field into section %s
      */
     public static final String FORMS_PAGE_ADD_1_FIELD = "FORMS_PAGE_ADD_1_FIELD";
+    /**
+     * Section with name "%s" has duplication in the existing list of sections
+     */
+    public static final String FORMS_PAGE_SECTION_NAME_DUPLICATION = "FORMS_PAGE_SECTION_NAME_DUPLICATION";
+    /**
+     * Field with name "%s" has duplication in the existing list of fields
+     */
+    public static final String FORMS_PAGE_FIELD_NAME_DUPLICATION = "FORMS_PAGE_FIELD_NAME_DUPLICATION";
+    /**
+     * Constraint with name "%s" has duplication in the existing list of constraints
+     */
+    public static final String FORMS_PAGE_CONSTRAINT_NAME_DUPLICATION = "FORMS_PAGE_CONSTRAINT_NAME_DUPLICATION";
+    /**
+     * Constraint option with name "%s" has duplication in the existing list of constraint options
+     */
+    public static final String FORMS_PAGE_CONSTRAINT_OPTION_NAME_DUPLICATION = "FORMS_PAGE_CONSTRAINT_OPTION_NAME_DUPLICATION";
     
     // Reference data
     /**

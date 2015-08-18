@@ -1,6 +1,8 @@
 package org.fao.sola.admin.web.beans.form;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.PostConstruct;
@@ -9,8 +11,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.apache.commons.lang.ArrayUtils;
 import org.fao.sola.admin.web.beans.AbstractBackingBean;
 import org.fao.sola.admin.web.beans.helpers.ErrorKeys;
+import org.fao.sola.admin.web.beans.helpers.FormConstraintOptionSorter;
+import org.fao.sola.admin.web.beans.helpers.FormFieldSorter;
+import org.fao.sola.admin.web.beans.helpers.FormSectionSorter;
 import org.fao.sola.admin.web.beans.helpers.MessageProvider;
 import org.fao.sola.admin.web.beans.helpers.MessagesKeys;
 import org.fao.sola.admin.web.beans.language.LanguageBean;
@@ -226,6 +232,7 @@ public class FormsPageBean extends AbstractBackingBean {
             tmpSection.setId(UUID.randomUUID().toString());
             tmpSection.setFormTemplateName(formTemplate.getName());
             tmpSection.setFieldTemplateList(new ArrayList<FieldTemplate>());
+            tmpSection.setItemOrder(1);
         } else {
             tmpSection = MappingManager.getMapper().map(sec, SectionTemplate.class);
         }
@@ -284,6 +291,18 @@ public class FormsPageBean extends AbstractBackingBean {
         if (tmpSection.getMinOccurrences() > tmpSection.getMaxOccurrences()) {
             errors += msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_MIN_OCCUR_GRATER_MAX_OCCUR) + "\r\n";
         }
+        // check for name duplication
+        if (formTemplate.getSectionTemplateList() != null) {
+            // Check if section already exists
+            for (SectionTemplate templ : formTemplate.getSectionTemplateList()) {
+                if (templ.getEntityAction() != EntityAction.DELETE && 
+                        !templ.getId().equalsIgnoreCase(tmpSection.getId()) &&
+                        StringUtility.empty(templ.getName()).equalsIgnoreCase(StringUtility.empty(tmpSection.getName()))) {
+                    errors += String.format(msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_SECTION_NAME_DUPLICATION), tmpSection.getName()) + "\r\n";
+                    break;
+                }
+            }
+        }
         if (!errors.equals("")) {
             throw new Exception(errors);
         }
@@ -297,11 +316,13 @@ public class FormsPageBean extends AbstractBackingBean {
             for (SectionTemplate templ : formTemplate.getSectionTemplateList()) {
                 if (templ.getId().equals(tmpSection.getId())) {
                     MappingManager.getMapper().map(tmpSection, templ);
+                    Collections.sort(formTemplate.getSectionTemplateList(), new FormSectionSorter());
                     return;
                 }
             }
             // Otherwise add it
             formTemplate.getSectionTemplateList().add(tmpSection);
+            Collections.sort(formTemplate.getSectionTemplateList(), new FormSectionSorter());
         }
     }
 
@@ -327,6 +348,7 @@ public class FormsPageBean extends AbstractBackingBean {
             tmpField = new FieldTemplate();
             tmpField.setId(UUID.randomUUID().toString());
             tmpField.setSectionTemplateId(sectionId);
+            tmpField.setItemOrder(1);
             tmpField.setFieldConstraintList(new ArrayList<FieldConstraint>());
         } else {
             tmpField = MappingManager.getMapper().map(fTmpl, FieldTemplate.class);
@@ -373,13 +395,31 @@ public class FormsPageBean extends AbstractBackingBean {
         if (StringUtility.isEmpty(tmpField.getFieldType())) {
             errors += msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_SELECT_FIELD_TYPE) + "\r\n";
         }
-
-        tmpField.setDisplayName(localizedFieldNames.buildMultilingualString());
+        // check for name duplication
+        if (formTemplate.getSectionTemplateList() != null) {
+            // Look for section 
+            for (SectionTemplate secTmpl : formTemplate.getSectionTemplateList()) {
+                if (secTmpl.getId().equals(tmpField.getSectionTemplateId())) {
+                    // Look for field
+                    for (FieldTemplate fTmpl : secTmpl.getFieldTemplateList()) {
+                        if (fTmpl.getEntityAction() != EntityAction.DELETE && 
+                                !fTmpl.getId().equalsIgnoreCase(tmpField.getId()) &&
+                                StringUtility.empty(fTmpl.getName()).equalsIgnoreCase(StringUtility.empty(tmpField.getName()))) {
+                            errors += String.format(msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_FIELD_NAME_DUPLICATION), tmpField.getName()) + "\r\n";
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
         
         if (!errors.equals("")) {
             throw new Exception(errors);
         }
 
+        tmpField.setDisplayName(localizedFieldNames.buildMultilingualString());
+        
         if (formTemplate.getSectionTemplateList() != null) {
             // Look for section 
             for (SectionTemplate secTmpl : formTemplate.getSectionTemplateList()) {
@@ -388,11 +428,13 @@ public class FormsPageBean extends AbstractBackingBean {
                     for (FieldTemplate fTmpl : secTmpl.getFieldTemplateList()) {
                         if (fTmpl.getId().equals(tmpField.getId())) {
                             MappingManager.getMapper().map(tmpField, fTmpl);
+                            Collections.sort(secTmpl.getFieldTemplateList(), new FormFieldSorter());
                             return;
                         }
                     }
                     // Otherwise add it
                     secTmpl.getFieldTemplateList().add(tmpField);
+                    Collections.sort(secTmpl.getFieldTemplateList(), new FormFieldSorter());
                     return;
                 }
             }
@@ -469,7 +511,31 @@ public class FormsPageBean extends AbstractBackingBean {
         if (StringUtility.isEmpty(tmpConstraint.getFieldConstraintType())) {
             errors += msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_SELECT_FIELD_CONSTRAINT_TYPE) + "\r\n";
         }
-
+        // check for name duplication
+        if (formTemplate.getSectionTemplateList() != null) {
+            for (SectionTemplate secTmpl : formTemplate.getSectionTemplateList()) {
+                if (secTmpl.getFieldTemplateList() != null) {
+                    // Look for field 
+                    for (FieldTemplate fTmpl : secTmpl.getFieldTemplateList()) {
+                        if (fTmpl.getId().equals(tmpConstraint.getFieldTemplateId())) {
+                            // Found field, look for constraint
+                            if (fTmpl.getFieldConstraintList() != null) {
+                                for (FieldConstraint fConstr : fTmpl.getFieldConstraintList()) {
+                                    if (fConstr.getEntityAction() != EntityAction.DELETE && 
+                                            !fConstr.getId().equalsIgnoreCase(tmpConstraint.getId()) &&
+                                            StringUtility.empty(fConstr.getName()).equalsIgnoreCase(StringUtility.empty(tmpConstraint.getName()))) {
+                                        errors += String.format(msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_CONSTRAINT_NAME_DUPLICATION), tmpConstraint.getName()) + "\r\n";
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+       
         if (!errors.equals("")) {
             throw new Exception(errors);
         }
@@ -525,6 +591,7 @@ public class FormsPageBean extends AbstractBackingBean {
         if (option == null) {
             tmpOption = new FieldConstraintOption();
             tmpOption.setId(UUID.randomUUID().toString());
+            tmpOption.setItemOrder(1);
             tmpOption.setFieldConstraintId(constrId);
         } else {
             tmpOption = MappingManager.getMapper().map(option, FieldConstraintOption.class);
@@ -565,7 +632,34 @@ public class FormsPageBean extends AbstractBackingBean {
         if (!localizedOptionNames.hasValues()) {
             errors += msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_FILL_DISPLAY_NAME) + "\r\n";
         }
-
+        // check for name duplication
+        for (SectionTemplate secTmpl : formTemplate.getSectionTemplateList()) {
+            if (secTmpl.getFieldTemplateList() != null) {
+                // Loop through fields 
+                for (FieldTemplate fTmpl : secTmpl.getFieldTemplateList()) {
+                    if (fTmpl.getFieldConstraintList() != null) {
+                        // Loop through constraints
+                        for (FieldConstraint fConstr : fTmpl.getFieldConstraintList()) {
+                            if (fConstr.getId().equals(tmpOption.getFieldConstraintId())) {
+                                // Found constaint, loop through options
+                                if (fConstr.getFieldConstraintOptionList() != null) {
+                                    for (FieldConstraintOption option : fConstr.getFieldConstraintOptionList()) {
+                                        if (fConstr.getEntityAction() != EntityAction.DELETE && 
+                                                !option.getId().equalsIgnoreCase(tmpOption.getId()) &&
+                                                StringUtility.empty(option.getName()).equalsIgnoreCase(StringUtility.empty(tmpOption.getName()))) {
+                                            errors += String.format(msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_CONSTRAINT_OPTION_NAME_DUPLICATION), tmpOption.getName()) + "\r\n";
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
         if (!errors.equals("")) {
             throw new Exception(errors);
         }
@@ -591,11 +685,13 @@ public class FormsPageBean extends AbstractBackingBean {
                                         if (option.getId().equals(tmpOption.getId())) {
                                             // Found option
                                             MappingManager.getMapper().map(tmpOption, option);
+                                            Collections.sort(fConstr.getFieldConstraintOptionList(), new FormConstraintOptionSorter());
                                             return;
                                         }
                                     }
                                     // Otherwise add it
                                     fConstr.getFieldConstraintOptionList().add(tmpOption);
+                                    Collections.sort(fConstr.getFieldConstraintOptionList(), new FormConstraintOptionSorter());
                                     return;
                                 }
                             }

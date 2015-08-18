@@ -152,7 +152,7 @@ public class DbBackupPageBean extends AbstractBackingBean {
         return files;
     }
 
-    private String getBackupFolder() {
+    public String getBackupFolder() {
         if (!StringUtility.isEmpty(fullPath)) {
             return fullPath;
         }
@@ -207,7 +207,7 @@ public class DbBackupPageBean extends AbstractBackingBean {
             // Generate backup file name
             Date date = Calendar.getInstance().getTime();
             String fileName = getBackupFolder() + System.getProperty("file.separator")
-                    + dbName + "_" + DateUtility.formatDate(date, "yyyy-MM-dd_HHmmss") + ".bakup";
+                    + dbName + "_" + DateUtility.formatDate(date, "yyyy-MM-dd_HHmmss") + ".backup";
 
             // Do backup
             Process p;

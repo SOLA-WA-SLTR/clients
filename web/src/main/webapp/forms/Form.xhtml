@@ -192,6 +192,9 @@
                                                                 #{msg.FORMS_PAGE_MAX_OCCURRENCE}
                                                             </th>
                                                             <th>
+                                                                #{msg.FORMS_PAGE_ITEM_ORDER}
+                                                            </th>
+                                                            <th>
                                                                 #{msg.FORMS_PAGE_ERROR_MSG}
                                                             </th>
                                                         </tr>
@@ -213,6 +216,9 @@
                                                             </td>
                                                             <td>
                                                                 #{s.maxOccurrences}
+                                                            </td>
+                                                            <td>
+                                                                #{s.itemOrder}
                                                             </td>
                                                             <td>
                                                                 #{languageBean.getLocalizedString(s.errorMsg)}
@@ -274,6 +280,9 @@
                                                                         <th>
                                                                             #{msg.FORMS_PAGE_FIELD_TYPE}
                                                                         </th>
+                                                                        <th>
+                                                                            #{msg.FORMS_PAGE_ITEM_ORDER}
+                                                                        </th>
                                                                     </tr>
                                                                     <tr>
                                                                         <td>
@@ -287,6 +296,9 @@
                                                                         </td>
                                                                         <td>
                                                                             #{f.fieldType}
+                                                                        </td>
+                                                                        <td>
+                                                                            #{f.itemOrder}
                                                                         </td>
                                                                     </tr>
                                                                 </table>
@@ -411,6 +423,9 @@
                                                                                                         #{msg.FORMS_PAGE_DISPLAY_NAME}
                                                                                                     </th>
                                                                                                     <th>
+                                                                                                        #{msg.FORMS_PAGE_ITEM_ORDER}
+                                                                                                    </th>
+                                                                                                    <th>
                                                                                                     </th>
                                                                                                 </tr>
                                                                                                 <ui:repeat value="#{formsPageBean.getOptions(fc)}" var="fco">
@@ -420,6 +435,9 @@
                                                                                                         </td>
                                                                                                         <td>
                                                                                                             #{languageBean.getLocalizedString(fco.displayName)}
+                                                                                                        </td>
+                                                                                                        <td>
+                                                                                                            #{fco.itemOrder}
                                                                                                         </td>
                                                                                                         <td>
                                                                                                             <h:commandLink class="BlueLink" title="#{msg.GENERAL_LABEL_EDIT}">
@@ -542,7 +560,7 @@
                                         <div class="tab-content">
                                             <div class="tab-pane active" id="sectionGeneral" style="padding-top: 10px;">
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <label>
                                                             #{msg.FORMS_PAGE_NAME} <i class="glyphicon glyphicon-required"></i>
                                                         </label>
@@ -553,7 +571,7 @@
                                                                      onkeypress="return limitSpecialKeys(event)"
                                                                      class="form-control" />
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <label>
                                                             #{msg.FORMS_PAGE_MIN_OCCURRENCE} <i class="glyphicon glyphicon-required"></i>
                                                         </label>
@@ -563,7 +581,7 @@
                                                                      maxlength="255"
                                                                      class="form-control" />
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <label>
                                                             #{msg.FORMS_PAGE_MAX_OCCURRENCE} <i class="glyphicon glyphicon-required"></i>
                                                         </label>
@@ -571,6 +589,16 @@
                                                         <h:inputText value="#{formsPageBean.tmpSection.maxOccurrences}" 
                                                                      id="txtSectionMaxOccurrence"
                                                                      maxlength="255"
+                                                                     class="form-control" />
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>
+                                                            #{msg.FORMS_PAGE_ITEM_ORDER} <i class="glyphicon glyphicon-required"></i>
+                                                        </label>
+                                                        <br />
+                                                        <h:inputText value="#{formsPageBean.tmpSection.itemOrder}" 
+                                                                     id="txtItemOrder"
+                                                                     maxlength="3"
                                                                      class="form-control" />
                                                     </div>
                                                 </div>
@@ -651,7 +679,7 @@
                                 <div id="pnlWrapper_field" class="HiddenItem">
                                     <h:panelGroup id="pnlFieldRecord" layout="block">
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <label>
                                                     #{msg.FORMS_PAGE_NAME} <i class="glyphicon glyphicon-required"></i>
                                                 </label>
@@ -662,7 +690,7 @@
                                                              onkeypress="return limitSpecialKeys(event)"
                                                              class="form-control" />
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <label>
                                                     #{msg.FORMS_PAGE_FIELD_TYPE} <i class="glyphicon glyphicon-required"></i>
                                                 </label>
@@ -677,7 +705,7 @@
                                                                    itemValue="#{ft.code}" />
                                                 </h:selectOneListbox>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <label>
                                                     #{msg.FORMS_PAGE_HINT} <i class="glyphicon glyphicon-required"></i>
                                                 </label>
@@ -685,6 +713,16 @@
                                                 <h:inputText value="#{formsPageBean.tmpField.hint}" 
                                                              id="txtFieldHint"
                                                              maxlength="255"
+                                                             class="form-control" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>
+                                                    #{msg.FORMS_PAGE_ITEM_ORDER} <i class="glyphicon glyphicon-required"></i>
+                                                </label>
+                                                <br />
+                                                <h:inputText value="#{formsPageBean.tmpField.itemOrder}" 
+                                                             id="txtFieldOrder"
+                                                             maxlength="3"
                                                              class="form-control" />
                                             </div>
                                         </div>
@@ -848,7 +886,7 @@
                                 <div id="pnlWrapper_option" class="HiddenItem">
                                     <h:panelGroup id="pnlOptionRecord" layout="block">
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-8">
                                                 <label>
                                                     #{msg.FORMS_PAGE_NAME} <i class="glyphicon glyphicon-required"></i>
                                                 </label>
@@ -857,6 +895,16 @@
                                                              id="txtOptionName"
                                                              maxlength="255"
                                                              onkeypress="return limitSpecialKeys(event)"
+                                                             class="form-control" />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>
+                                                    #{msg.FORMS_PAGE_ITEM_ORDER} <i class="glyphicon glyphicon-required"></i>
+                                                </label>
+                                                <br />
+                                                <h:inputText value="#{formsPageBean.tmpOption.itemOrder}" 
+                                                             id="txtOptionOrder"
+                                                             maxlength="3"
                                                              class="form-control" />
                                             </div>
                                         </div>

@@ -39,9 +39,9 @@
                                     <a href="#" onclick="return openRestoreDialog('#{f.name}')" title="#{msg.DB_BACKUP_PAGE_RESTORE}">
                                         <i class="glyphicon glyphicon-flash"></i>
                                     </a>
-                                    <h:commandLink action="#{dbBackupPageBean.download(f.name)}">
+                                    <a href="#{request.contextPath}/db/GetBackupFile?file=#{f.name}">
                                         #{f.name}
-                                    </h:commandLink>
+                                    </a>
                                 </span>
                             </h:column>
                             <h:column>
