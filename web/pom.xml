@@ -57,6 +57,14 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.sola.services</groupId>
+            <artifactId>sola-cache</artifactId>
+            <version>v1503a</version>
+            <!-- Omit the CacheEJB from Web Admin. This EJB must be deployed
+                 from an EAR -->
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>${services.group.id}.ejbs</groupId>
             <artifactId>sola-admin-search</artifactId>
             <version>${project.version}</version>
