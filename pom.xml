@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>sola-admin-main</artifactId>
-        <groupId>org.fao.sola.admin</groupId>
-        <version>1504a</version>
+        <groupId>org.nga.sola.admin</groupId>
+        <version>1510a</version>
     </parent>
-    <groupId>org.fao.sola.admin</groupId>
+    <groupId>org.nga.sola.admin</groupId>
     <artifactId>sola-admin-clients</artifactId>
     <packaging>pom</packaging>
-    <version>1504a</version>
+    <version>1510a</version>
     <name>Clients Admin POM</name>
     <modules>
         <module>web</module>

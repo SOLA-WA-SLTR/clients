@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>sola-admin-clients</artifactId>
-        <groupId>org.fao.sola.admin</groupId>
-        <version>1504a</version>
+        <groupId>org.nga.sola.admin</groupId>
+        <version>1510a</version>
     </parent>
     
-    <groupId>org.fao.sola.admin.clients.web</groupId>
+    <groupId>org.nga.sola.admin.clients.web</groupId>
     <artifactId>sola-admin-clients-web</artifactId>
-    <version>1504a</version>
+    <version>1510a</version>
     <packaging>war</packaging>
 
     <name>Clients Admin Web</name>
@@ -38,7 +38,7 @@
     </scm>
     
     <properties>
-        <services.group.id>org.fao.sola.admin.services</services.group.id>
+        <services.group.id>org.nga.sola.admin.services</services.group.id>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
