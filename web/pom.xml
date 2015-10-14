@@ -57,7 +57,7 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>${services.group.id}.ejbs</groupId>
+            <groupId>${services.group.id}</groupId>
             <artifactId>sola-admin-cache</artifactId>
             <version>${project.version}</version>
             <!-- Omit the CacheEJB from Web Admin. This EJB must be deployed
