@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:body>
+        <ui:composition template="../templates/BasicTemplate.xhtml">
+            <ui:define name="title">
+                #{msg.MIGRATION_PAGE_TITLE}
+            </ui:define>
+            <ui:define name="content">
+                <div class="PageName">
+                    <i class="glyphicon glyphicon-transfer"></i> #{msg.MIGRATION_PAGE_TITLE}
+                </div>
+                <div class="content">
+                    <h:commandLink>
+                        <i class="glyphicon glyphicon-flash"></i> #{msg.MIGRATION_PAGE_TRANSFER}
+                        <f:ajax event="click" render=":mainForm:txtLog"
+                                            onevent="handleAjax"
+                                            onerror="handleAjaxError"
+                                            listener="#{migrationPageBean.transfer()}" />
+                    </h:commandLink>
+                    <p></p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>
+                                #{msg.MIGRATION_PAGE_LOG}:
+                            </label>
+                            <h:inputTextarea id="txtLog" 
+                                             value="#{migrationPageBean.log}"
+                                             class="form-control" 
+                                             style="height: 400px;font-size: 11px;" />
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

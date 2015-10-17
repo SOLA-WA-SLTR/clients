@@ -22,21 +22,6 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <name>Neil Pullar</name>
-            <email>Neil.Pullar@fao.org</email>
-            <organization>FAO</organization>
-            <organizationUrl>http://www.fao.org</organizationUrl>
-        </developer>
-    </developers>
-
-    <scm>
-        <connection>scm:git:git@github.com:SOLA-WA-FAO/clients.git</connection>
-        <developerConnection>scm:git:git@github.com:SOLA-WA-FAO/clients.git</developerConnection>
-        <url>git@github.com:SOLA-WA-FAO/clients.git</url>
-    </scm>
-    
     <properties>
         <services.group.id>org.nga.sola.admin.services</services.group.id>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -128,6 +113,32 @@
                 </exclusion>
             </exclusions>
             <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>org.sola.services.ejbs</groupId>
+            <artifactId>sola-administrative</artifactId>
+            <version>1503a</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sola.cs.services.ejbs</groupId>
+            <artifactId>sola-cs-claim</artifactId>
+            <version>1504a</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+            <type>ejb</type>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
