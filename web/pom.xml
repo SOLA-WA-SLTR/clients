@@ -26,6 +26,7 @@
         <services.group.id>org.nga.sola.admin.services</services.group.id>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <registryVersion>1510dev_b</registryVersion>
     </properties>
     
     <dependencies>
@@ -34,6 +35,11 @@
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vividsolutions</groupId>
+            <artifactId>jts</artifactId>
+            <version>1.8</version>
         </dependency>
         <dependency>
             <groupId>${services.group.id}</groupId>
@@ -46,7 +52,7 @@
             <artifactId>sola-admin-cache</artifactId>
             <version>${project.version}</version>
             <!-- Omit the CacheEJB from Web Admin. This EJB must be deployed
-                 from an EAR -->
+            from an EAR -->
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -117,7 +123,7 @@
         <dependency>
             <groupId>org.sola.services.ejbs</groupId>
             <artifactId>sola-administrative</artifactId>
-            <version>1503a</version>
+            <version>${registryVersion}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>servlet-api</artifactId>
