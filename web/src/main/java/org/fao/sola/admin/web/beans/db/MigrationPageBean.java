@@ -266,6 +266,8 @@ public class MigrationPageBean extends AbstractBackingBean {
 
                         // Documents
                         rrr.setSourceList(new ArrayList<Source>());
+                        baUnit.setSourceList(new ArrayList<Source>());
+                        
                         if (claim.getAttachments() != null) {
                             for (Attachment attachment : claim.getAttachments()) {
                                 Source source = new Source();
@@ -286,7 +288,13 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 source.setReferenceNr(attachment.getReferenceNr());
                                 source.setTypeCode(attachment.getTypeCode());
 
-                                rrr.getSourceList().add(source);
+                                if(attachment.getTypeCode().equalsIgnoreCase("cadastralSurvey")){
+                                    // Add to BaUnit
+                                    baUnit.getSourceList().add(source);
+                                } else {
+                                    // Add to RRR
+                                    rrr.getSourceList().add(source);
+                                }
                             }
                         }
 
