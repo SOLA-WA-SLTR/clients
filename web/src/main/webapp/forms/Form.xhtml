@@ -496,21 +496,19 @@
                                         <div class="row">
                                             <div class="col-md-9">
                                                 <label>
-                                                    #{msg.FORMS_PAGE_NAME} <i class="glyphicon glyphicon-required"></i>
+                                                    #{msg.FORMS_PAGE_NAME}
                                                 </label>
                                                 <br />
-                                                <h:inputText value="#{formsPageBean.formTemplate.name}" 
-                                                             id="txtFormName"
-                                                             maxlength="255"
-                                                             disabled="#{not formsPageBean.formTemplate.isNew()}"
-                                                             class="form-control" onkeypress="return limitSpecialKeys(event)" />
+                                                #{formsPageBean.formTemplate.name}
                                             </div>
                                             <div class="col-md-3">
                                                 <label>
                                                     #{msg.FORMS_PAGE_DEFAULT}
                                                 </label>
                                                 <br />
-                                                <h:selectBooleanCheckbox id="chbxFormDefault" value="#{formsPageBean.formTemplate.isDefault}" />
+                                                <ui:fragment rendered="#{formsPageBean.formTemplate.isDefault}">
+                                                    <i class="glyphicon glyphicon-ok"></i>
+                                                </ui:fragment>
                                             </div>
                                         </div>
 

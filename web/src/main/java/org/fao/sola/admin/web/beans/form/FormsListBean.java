@@ -52,6 +52,18 @@ public class FormsListBean extends AbstractBackingBean {
         return claimEjb.checkFormTemplateHasPayload(formName);
     }
     
+    public void makeDefault(FormTemplate fTmpl) {
+        try {
+            if(fTmpl == null){
+                return;
+            }
+            claimEjb.makeFormDefault(fTmpl.getName());
+            init();
+        } catch (Exception e) {
+            getContext().addMessage(null, new FacesMessage(processException(e, langBean.getLocale()).getMessage()));
+        }
+    }
+    
     public void delete(FormTemplate fTmpl) {
         try {
             if(fTmpl == null){

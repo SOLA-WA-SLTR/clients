@@ -212,9 +212,6 @@ public class FormsPageBean extends AbstractBackingBean {
     public void saveFormHeader() throws Exception {
         // Check for errors
         String errors = "";
-        if (StringUtility.isEmpty(formTemplate.getName())) {
-            errors += msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_FILL_NAME) + "\r\n";
-        }
         if (!localizedFormDisplayNames.hasValues()) {
             errors += msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_FILL_DISPLAY_NAME);
         }
@@ -705,8 +702,8 @@ public class FormsPageBean extends AbstractBackingBean {
     public void saveForm() {
         try {
             // Check form
-            if (StringUtility.isEmpty(formTemplate.getName()) || StringUtility.isEmpty(formTemplate.getDisplayName())) {
-                getContext().addMessage(null, new FacesMessage(msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_FILL_FORM_NAME_AND_DISPLAY_NAME)));
+            if (StringUtility.isEmpty(formTemplate.getDisplayName())) {
+                getContext().addMessage(null, new FacesMessage(msgProvider.getErrorMessage(ErrorKeys.FORMS_PAGE_FILL_DISPLAY_NAME)));
                 return;
             }
 

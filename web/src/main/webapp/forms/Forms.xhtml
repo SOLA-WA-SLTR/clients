@@ -27,13 +27,12 @@
                             <h:column>
                                 <f:facet name="header">#{msg.FORMS_PAGE_NAME}</f:facet>
                                 <h:commandLink style="padding-right: 5px;"
-                                               rendered="#{not formsListBean.canBeDeleted(f.name)}"
-                                               title="#{msg.GENERAL_LABEL_DELETE}"
-                                               onclick="return confirm('#{msg.FORMS_PAGE_FORM_DELETE_CONFIRM}')">
-                                    <f:ajax listener="#{formsListBean.delete(f)}" 
+                                               rendered="#{not f.isDefault}"
+                                               title="#{msg.FORMS_PAGE_MAKE_DEFAULT}">
+                                    <f:ajax listener="#{formsListBean.makeDefault(f)}" 
                                             event="click" onevent="handleAjax" onerror="handleAjaxError"
                                             render=":mainForm:pnlForms" />
-                                    <i class="glyphicon glyphicon-remove"></i>
+                                    <i class="glyphicon glyphicon-pushpin"></i>
                                 </h:commandLink>
                                 <h:outputLink value="#{request.contextPath}/forms/Form.xhtml?id=#{f.name}" 
                                               onclick="blockUI()" title="#{msg.GENERAL_LABEL_EDIT}">
