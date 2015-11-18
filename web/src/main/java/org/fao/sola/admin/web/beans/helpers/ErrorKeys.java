@@ -121,6 +121,9 @@ public class ErrorKeys {
      */
     public static final String FORMS_PAGE_CONSTRAINT_OPTION_NAME_DUPLICATION = "FORMS_PAGE_CONSTRAINT_OPTION_NAME_DUPLICATION";
     
+    /**Select form file to import*/
+    public static final String FORMS_PAGE_SELECT_FORM_FILE = "FORMS_PAGE_SELECT_FORM_FILE";
+    
     // Reference data
     /**
      * - Fill in code

@@ -19,6 +19,10 @@
                                   onclick="blockUI()">
                         <i class="glyphicon glyphicon-plus"></i> #{msg.FORMS_PAGE_NEW_FORM}
                     </h:outputLink>
+                    &nbsp;&nbsp;
+                    <h:outputLink value="#" onclick="return openImportForm()">
+                        <i class="glyphicon glyphicon-import"></i> #{msg.GENERAL_LABEL_IMPORT}
+                    </h:outputLink>
                     <h:panelGroup id="pnlForms" layout="block">
                         <h:dataTable value="#{formsListBean.forms}" var="f"
                                      id="tableForms"
@@ -26,6 +30,11 @@
                                      headerClass="table-header">
                             <h:column>
                                 <f:facet name="header">#{msg.FORMS_PAGE_NAME}</f:facet>
+                                <h:commandLink style="padding-right: 5px;"
+                                               action="#{formsListBean.export(f)}"
+                                               title="#{msg.GENERAL_LABEL_EXPORT}">
+                                    <i class="glyphicon glyphicon-export"></i>
+                                </h:commandLink>
                                 <h:commandLink style="padding-right: 5px;"
                                                rendered="#{not f.isDefault}"
                                                title="#{msg.FORMS_PAGE_MAKE_DEFAULT}">
@@ -53,6 +62,74 @@
                         </h:dataTable>
                     </h:panelGroup>
                 </div>
+            </ui:define>
+            
+            <ui:define name="content2">
+                <h:form id="importForm" enctype="multipart/form-data" acceptcharset="UTF-8">
+                <div style="display: none;" class="modal fade" id="importDialog" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">#{msg.GENERAL_LABEL_IMPORT}</span></button>
+                                <h4 class="modal-title" id="myModalLabel">#{msg.GENERAL_LABEL_IMPORT}</h4>
+                            </div>
+                            <div class="modal-body" id="importBody">
+                                <h:panelGroup id="pnlImport" layout="block">
+                                    <div class="form-group">
+                                        <h:outputLabel for="fFormFile">
+                                            #{msg.FORMS_PAGE_FORM_TEMPLATE} <i class="glyphicon glyphicon-required"></i>
+                                        </h:outputLabel>
+                                        <h:inputFile id="fFormFile" value="#{formsListBean.formFile}" />
+                                    </div>
+                                </h:panelGroup>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">#{msg.GENERAL_LABEL_CLOSE}</button>
+                                <h:commandButton class="btn btn-primary" value="#{msg.GENERAL_LABEL_SAVE}" onclick="return checkImportForm()">
+                                    <f:ajax event="click" execute=":importForm:pnlImport" 
+                                            render=":mainForm:pnlForms"
+                                            onevent="onImport"
+                                            onerror="handleAjaxError"
+                                            listener="#{formsListBean.importForm()}" />
+                                </h:commandButton>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <script language="javascript">
+                    function checkImportForm() {
+                        var selectFileError = '- #{err.FORMS_PAGE_SELECT_FORM_FILE}';
+                        var errors = "";
+
+                        if (document.getElementById("importForm:fFormFile") !== null) {
+                            if ($("#importForm\\:fFormFile").val() === '') {
+                                errors += selectFileError;
+                            }
+                        }
+
+                        if (errors !== '') {
+                            alert(errors);
+                            return false;
+                        }
+                    }
+
+                    function openImportForm() {
+                        $('#importDialog').modal('show');
+                        return false;
+                    }
+
+                    function onImport(data) {
+                        handleAjax(data);
+                        var status = data.status;
+                        switch (status) {
+                            case "success":
+                                $('#importDialog').modal('hide');
+                                break;
+                        }
+                    }
+                </script>
+            </h:form>
             </ui:define>
         </ui:composition>
     </h:body>
