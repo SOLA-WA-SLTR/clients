@@ -6,8 +6,10 @@ import com.vividsolutions.jts.io.WKBReader;
 import com.vividsolutions.jts.io.WKBWriter;
 import com.vividsolutions.jts.io.WKTReader;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +35,7 @@ import org.sola.cs.services.ejbs.claim.entities.FieldPayload;
 import org.sola.cs.services.ejbs.claim.entities.FieldType;
 import org.sola.cs.services.ejbs.claim.entities.SectionElementPayload;
 import org.sola.cs.services.ejbs.claim.entities.SectionPayload;
+import org.sola.services.common.EntityAction;
 import org.sola.services.common.br.ValidationResult;
 import org.sola.services.common.faults.FaultUtility;
 import org.sola.services.common.faults.SOLAValidationException;
@@ -42,10 +45,12 @@ import org.sola.services.ejb.address.repository.entities.Address;
 import org.sola.services.ejb.administrative.businesslogic.AdministrativeEJBLocal;
 import org.sola.services.ejb.administrative.repository.entities.BaUnit;
 import org.sola.services.ejb.administrative.repository.entities.BaUnitArea;
-import org.sola.services.ejb.administrative.repository.entities.BaUnitDetail;
 import org.sola.services.ejb.administrative.repository.entities.BaUnitNotation;
+import org.sola.services.ejb.administrative.repository.entities.ConditionForRrr;
 import org.sola.services.ejb.administrative.repository.entities.Rrr;
 import org.sola.services.ejb.administrative.repository.entities.RrrShare;
+import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
+import org.sola.services.ejb.cadastre.repository.entities.AddressForCadastreObject;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 import org.sola.services.ejb.party.repository.entities.Party;
 import org.sola.services.ejb.source.repository.entities.Source;
@@ -73,7 +78,12 @@ public class MigrationPageBean extends AbstractBackingBean {
     @EJB
     DigitalArchiveEJBLocal archiveEjb;
 
+    @EJB
+    CadastreEJBLocal cadEjb;
+
     private String log;
+
+    private String parcelDuplicate;
 
     public String getLog() {
         return log;
@@ -100,7 +110,9 @@ public class MigrationPageBean extends AbstractBackingBean {
 
                         // Create BA unit and populate
                         BaUnit baUnit = new BaUnit();
-                        baUnit.setBaUnitDetailList(new ArrayList<BaUnitDetail>());
+//                        baUnit.setBaUnitDetailList(new ArrayList<BaUnitDetail>());
+                        baUnit.setRrrList(new ArrayList<Rrr>());
+
                         baUnit.setName(claim.getDescription());
 
                         // Dynamic form
@@ -121,33 +133,6 @@ public class MigrationPageBean extends AbstractBackingBean {
                             if (f != null && f.getBigDecimalPayload() != null) {
                                 baUnitSize = f.getBigDecimalPayload().multiply(BigDecimal.valueOf(10000));
                             }
-
-                            // Set cOfO
-                            BaUnitDetail baDetails = new BaUnitDetail();
-                            baDetails.setDetailCode("cOfO");
-                            baDetails.setCustomDetailText(claim.getDescription());
-                            baUnit.getBaUnitDetailList().add(baDetails);
-
-                            // Set other details
-                            addBaUnitDeatils(baUnit, claim, "advancePayment");
-                            addBaUnitDeatils(baUnit, claim, "block");
-                            addBaUnitDeatils(baUnit, claim, "dateSigned");
-                            addBaUnitDeatils(baUnit, claim, "dateRegistered");
-                            addBaUnitDeatils(baUnit, claim, "estate");
-                            addBaUnitDeatils(baUnit, claim, "instrumentRegistrationNo");
-                            addBaUnitDeatils(baUnit, claim, "LGA");
-                            addBaUnitDeatils(baUnit, claim, "location");
-                            addBaUnitDeatils(baUnit, claim, "layoutPlan");
-                            addBaUnitDeatils(baUnit, claim, "plotNum");
-                            addBaUnitDeatils(baUnit, claim, "cOfOtype");
-                            addBaUnitDeatils(baUnit, claim, "yearlyRent");
-                            addBaUnitDeatils(baUnit, claim, "reviewPeriod");
-                            addBaUnitDeatils(baUnit, claim, "dateCommenced");
-                            addBaUnitDeatils(baUnit, claim, "term");
-                            addBaUnitDeatils(baUnit, claim, "zone");
-                            addBaUnitDeatils(baUnit, claim, "IntellMapSheet");
-                            addBaUnitDeatils(baUnit, claim, "valueTodevelope");
-                            addBaUnitDeatils(baUnit, claim, "yearsTodevelope");
                         }
 
                         // Cadastre object
@@ -155,6 +140,10 @@ public class MigrationPageBean extends AbstractBackingBean {
                         baUnitArea.setBaUnitId(baUnit.getId());
                         baUnitArea.setTypeCode("officialArea");
                         CadastreObject co = new CadastreObject();
+                        Address coAddress = new Address();
+                        AddressForCadastreObject addressforco = new AddressForCadastreObject();
+
+//                        this assignment will be used only if no plot, block and layout plan are defined
                         if (!StringUtility.isEmpty(nameFirstPart)) {
                             baUnit.setNameFirstpart(nameFirstPart);
                             co.setNameFirstpart(nameFirstPart);
@@ -163,7 +152,51 @@ public class MigrationPageBean extends AbstractBackingBean {
                             baUnit.setNameLastpart(nameLastPart);
                             co.setNameLastpart(nameLastPart);
                         }
-                        co.setLandUseCode(claim.getLandUseCode());
+//                         in case plot, block and layout plan are defined the parcel name first part and name last part will be as follow
+                        String coNameFirstpart = "";
+                        String coNameLastpart = "";
+                        if (claim.getDynamicForm() != null) {
+
+                            FieldPayload f = getFieldPayload(claim, "block");
+                            if (f != null) {
+                                co.setBlock(getStringFieldValue(f));
+                                coNameLastpart = getStringFieldValue(f);
+                            }
+                            f = getFieldPayload(claim, "layoutPlan");
+                            if (f != null) {
+                                co.setSourceReference(getStringFieldValue(f));
+                                co.setNameLastpart(coNameLastpart + ' ' + getStringFieldValue(f));
+                            }
+                            f = getFieldPayload(claim, "plotNum");
+                            if (f != null) {
+                                co.setPlotNum(getStringFieldValue(f));
+                                co.setNameFirstpart(coNameFirstpart + getStringFieldValue(f));
+                            }
+                            f = getFieldPayload(claim, "LGA");
+                            if (f != null) {
+                                co.setLgaCode(getStringFieldValue(f));
+                            }
+
+                            f = getFieldPayload(claim, "IntellMapSheet");
+                            if (f != null) {
+                                co.setIntellMapSheet(getStringFieldValue(f));
+                            }
+
+//                          this will be valid only if no land use is defined in the cofo tab  
+                            co.setLandUseCode(claim.getLandUseCode());
+//                            this if land use is defined in the cofo tab
+                            f = getFieldPayload(claim, "cOfOtype");
+                            if (f != null) {
+                                co.setLandUseCode(getStringFieldValue(f));
+                            }
+
+                            f = getFieldPayload(claim, "location");
+                            if (f != null) {
+                                coAddress.setDescription(getStringFieldValue(f));
+                                co.setAddressList(new ArrayList<Address>());
+                                co.getAddressList().add(coAddress);
+                            }
+                        }
 
                         if (claim.getMappedGeometry() != null && claim.getMappedGeometry().length() > 0) {
                             // Add geometry
@@ -189,8 +222,31 @@ public class MigrationPageBean extends AbstractBackingBean {
                             baUnitArea.setSize(BigDecimal.ZERO);
                         }
 
-                        baUnit.setCadastreObjectList(new ArrayList<CadastreObject>());
-                        baUnit.getCadastreObjectList().add(co);
+                        List<CadastreObject> coExists = cadEjb.getCadastreObjectByAllParts(co.getNameFirstpart() + ' ' + co.getNameLastpart());
+                        String baUnitList = " ";
+                        if (coExists.size() == 0) {
+                            baUnit.setCadastreObjectList(new ArrayList<CadastreObject>());
+                            baUnit.getCadastreObjectList().add(co);
+                        } else {
+                            if (coExists.get(0).getGeomPolygon() != null) {
+                                coExists.get(0).setLgaCode(co.getLgaCode());
+                                coExists.get(0).setIntellMapSheet(co.getIntellMapSheet());
+                                coExists.get(0).setLandUseCode(co.getLandUseCode());
+                                coExists.get(0).getAddressList().add(coAddress);
+                                List<BaUnit> baUnitExists = admEjb.getBaUnitsByCadObject(coExists.get(0).getId());
+                                for (BaUnit existingBaUnit : baUnitExists) {
+                                    baUnitList += String.format(existingBaUnit.getNameFirstpart() + "/" + existingBaUnit.getNameLastpart() + "\r\n");
+//                                            
+                                }
+                                if (baUnitExists.size() > 0) {
+                                    parcelDuplicate = " WARNING There are already ba units linked to the same parcel: \r\n";
+                                    parcelDuplicate += "Ba unit(s) " + baUnitList + "\r\n";
+                                    parcelDuplicate += "Plot " + co.getNameFirstpart() + "/" + co.getNameLastpart() + "\r\n";
+                                }
+                                baUnit.setCadastreObjectList(new ArrayList<CadastreObject>());
+                                baUnit.getCadastreObjectList().add(coExists.get(0));
+                            }
+                        }
 
                         // Set BaUnit name
                         if (StringUtility.isEmpty(baUnit.getName())) {
@@ -267,7 +323,7 @@ public class MigrationPageBean extends AbstractBackingBean {
                         // Documents
                         rrr.setSourceList(new ArrayList<Source>());
                         baUnit.setSourceList(new ArrayList<Source>());
-                        
+
                         if (claim.getAttachments() != null) {
                             for (Attachment attachment : claim.getAttachments()) {
                                 Source source = new Source();
@@ -288,15 +344,101 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 source.setReferenceNr(attachment.getReferenceNr());
                                 source.setTypeCode(attachment.getTypeCode());
 
-                                if(attachment.getTypeCode().equalsIgnoreCase("cadastralSurvey")){
-                                    // Add to BaUnit
-                                    baUnit.getSourceList().add(source);
-                                } else {
-                                    // Add to RRR
-                                    rrr.getSourceList().add(source);
-                                }
+//                                if(attachment.getTypeCode().equalsIgnoreCase("cadastralSurvey")){
+//                                     Add to BaUnit
+//                                    baUnit.getSourceList().add(source);
+//                                } else {
+                                // Add to RRR
+                                rrr.getSourceList().add(source);
+//                                }
                             }
                         }
+//                        ConditionForRrr rrrCond = new ConditionForRrr();
+
+                        if (claim.getDynamicForm() != null) {
+                            FieldPayload f = getFieldPayload(claim, "volume");
+                            if (f != null) {
+                                nameFirstPart = getStringFieldValue(f);
+                            }
+                            f = getFieldPayload(claim, "folio");
+                            if (f != null) {
+                                nameLastPart = getStringFieldValue(f);
+                            }
+                            f = getFieldPayload(claim, "areaCofOhectares");
+                            if (f != null && f.getBigDecimalPayload() != null) {
+                                baUnitSize = f.getBigDecimalPayload().multiply(BigDecimal.valueOf(10000));
+                            }
+
+                            // Set cOfO
+                            rrr.setCOfO(claim.getDescription());
+                            // Set other details
+                            f = getFieldPayload(claim, "advancePayment");
+                            if (f != null && f.getBigDecimalPayload() != null) {
+                                rrr.setAdvancePayment(f.getBigDecimalPayload());
+                            }
+                            f = getFieldPayload(claim, "yearlyRent");
+                            if (f != null && f.getBigDecimalPayload() != null) {
+                                rrr.setYearlyRent(f.getBigDecimalPayload());
+                            }
+                            f = getFieldPayload(claim, "reviewPeriod");
+                            if (f != null && f.getBigDecimalPayload() != null) {
+                                rrr.setReviewPeriod(f.getBigDecimalPayload().toBigInteger().intValue());
+                            }
+                            f = getFieldPayload(claim, "term");
+                            if (f != null && f.getBigDecimalPayload() != null) {
+                                rrr.setTerm(f.getBigDecimalPayload().toBigInteger().intValue());
+                            }
+                            f = getFieldPayload(claim, "dateSigned");
+                            if (f != null) {
+                                try {
+                                    rrr.setDateSigned(getDateFieldValue(f.getStringPayload()));
+                                } catch (java.text.ParseException ex) {
+                                    Logger.getLogger(MigrationPageBean.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            f = getFieldPayload(claim, "dateRegistered");
+                            if (f != null) {
+                                try {
+                                    rrr.setRegistrationDate(getDateFieldValue(f.getStringPayload()));
+                                } catch (java.text.ParseException ex) {
+                                    Logger.getLogger(MigrationPageBean.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            f = getFieldPayload(claim, "dateCommenced");
+                            if (f != null) {
+                                try {
+                                    rrr.setDateCommenced(getDateFieldValue(f.getStringPayload()));
+                                } catch (java.text.ParseException ex) {
+                                    Logger.getLogger(MigrationPageBean.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+
+                            f = getFieldPayload(claim, "estate");
+                            if (f != null) {
+                                rrr.setRotCode(f.getStringPayload());
+                            }
+                            f = getFieldPayload(claim, "instrumentRegistrationNo");
+                            if (f != null) {
+                                rrr.setInstrRegNum(f.getStringPayload());
+                            }
+                            f = getFieldPayload(claim, "zone");
+                            if (f != null) {
+                                rrr.setZoneCode(f.getStringPayload());
+                            }
+
+//                            f = getFieldPayload(claim, "valueTodevelope");
+//                            if (f != null) {
+//                                rrrCond.setConditionCode(f.getName());
+//                                rrrCond.setCustomConditionText(getStringFieldValue(f));
+//                            }
+//                            f = getFieldPayload(claim, "yearsTodevelope");
+//                            if (f != null) {
+//                                rrrCond.setConditionCode(f.getName());
+//                                rrrCond.setCustomConditionText(getStringFieldValue(f));
+//                            }
+                        }
+//                        rrr.setConditionsList(new ArrayList<ConditionForRrr>());
+//                        rrr.getConditionsList().add(rrrCond);
 
                         // Add rrr to BaUnit
                         baUnit.setRrrList(new ArrayList<Rrr>());
@@ -306,12 +448,12 @@ public class MigrationPageBean extends AbstractBackingBean {
                         if (admEjb.importBaUnit(baUnit)) {
                             // Save BaUnit calculated area
                             admEjb.createBaUnitArea(baUnit.getId(), baUnitArea);
-
                             // Change claim status
                             claimAdminEjb.changeClaimStatus(claim.getId(), ClaimStatusConstants.MODERATED);
                         }
                     }
-                });
+                }
+                );
                 claimsLoaded += 1;
 
             } catch (Exception e) {
@@ -349,17 +491,18 @@ public class MigrationPageBean extends AbstractBackingBean {
         }
         log = String.format("Loaded %s claim(s)\r\n", claimsLoaded) + log;
         log = String.format("Found %s claim(s)\r\n", claimsTotal) + log;
-    }
 
-    private void addBaUnitDeatils(BaUnit baUnit, Claim claim, String code) {
-        FieldPayload f = getFieldPayload(claim, code);
-        if (f != null) {
-            BaUnitDetail baDetails = new BaUnitDetail();
-            baDetails.setDetailCode(code);
-            baDetails.setCustomDetailText(getStringFieldValue(f));
-            baUnit.getBaUnitDetailList().add(baDetails);
-        }
+        log = "===============================================\r\n"+parcelDuplicate + log;
     }
+    //    private void addBaUnitDeatils(BaUnit baUnit, Claim claim, String code) {
+    //        FieldPayload f = getFieldPayload(claim, code);
+    //        if (f != null) {
+    //            BaUnitDetail baDetails = new BaUnitDetail();
+    //            baDetails.setDetailCode(code);
+    //            baDetails.setCustomDetailText(getStringFieldValue(f));
+    //            baUnit.getBaUnitDetailList().add(baDetails);
+    //        }
+    //    }
 
     private String getStringFieldValue(FieldPayload f) {
         if (FieldType.TYPE_DECIMAL.equalsIgnoreCase(f.getFieldType())) {
@@ -379,6 +522,21 @@ public class MigrationPageBean extends AbstractBackingBean {
         } else {
             return f.getStringPayload();
         }
+    }
+
+    private Date getDateFieldValue(String stringDate) throws java.text.ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String dateInString = stringDate;
+
+//        try {
+        Date date = formatter.parse(dateInString);
+        System.out.println(date);
+        System.out.println(formatter.format(date));
+        return date;
+//	} catch (ParseException e) {
+//		e.printStackTrace();
+//	}
+
     }
 
     private FieldPayload getFieldPayload(Claim claim, String fieldName) {
