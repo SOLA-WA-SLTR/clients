@@ -185,10 +185,10 @@ public class MigrationPageBean extends AbstractBackingBean {
 //                          this will be valid only if no land use is defined in the cofo tab  
                             co.setLandUseCode(claim.getLandUseCode());
 //                            this if land use is defined in the cofo tab
-                            f = getFieldPayload(claim, "cOfOtype");
-                            if (f != null) {
-                                co.setLandUseCode(getStringFieldValue(f));
-                            }
+//                            f = getFieldPayload(claim, "cOfOtype");
+//                            if (f != null) {
+//                                co.setLandUseCode(getStringFieldValue(f));
+//                            }
 
                             f = getFieldPayload(claim, "location");
                             if (f != null) {
@@ -223,29 +223,31 @@ public class MigrationPageBean extends AbstractBackingBean {
                         }
 
                         List<CadastreObject> coExists = cadEjb.getCadastreObjectByAllParts(co.getNameFirstpart() + ' ' + co.getNameLastpart());
-                        String baUnitList = " ";
+                        String baUnitList = "";
                         if (coExists.size() == 0) {
                             baUnit.setCadastreObjectList(new ArrayList<CadastreObject>());
                             baUnit.getCadastreObjectList().add(co);
                         } else {
-                            if (coExists.get(0).getGeomPolygon() != null) {
+//                            if (coExists.get(0).getGeomPolygon() != null) {
                                 coExists.get(0).setLgaCode(co.getLgaCode());
                                 coExists.get(0).setIntellMapSheet(co.getIntellMapSheet());
                                 coExists.get(0).setLandUseCode(co.getLandUseCode());
                                 coExists.get(0).getAddressList().add(coAddress);
                                 List<BaUnit> baUnitExists = admEjb.getBaUnitsByCadObject(coExists.get(0).getId());
                                 for (BaUnit existingBaUnit : baUnitExists) {
-                                    baUnitList += String.format(existingBaUnit.getNameFirstpart() + "/" + existingBaUnit.getNameLastpart() + "\r\n");
+                                    baUnitList += existingBaUnit.getNameFirstpart() + "/" + existingBaUnit.getNameLastpart() + "\r\n";
 //                                            
                                 }
                                 if (baUnitExists.size() > 0) {
-                                    parcelDuplicate = " WARNING There are already ba units linked to the same parcel: \r\n";
-                                    parcelDuplicate += "Ba unit(s) " + baUnitList + "\r\n";
-                                    parcelDuplicate += "Plot " + co.getNameFirstpart() + "/" + co.getNameLastpart() + "\r\n";
+                                    parcelDuplicate = " !! WARNING There are already ba units linked to the same parcel\r\n";
+                                    parcelDuplicate += " Take note of the following information and fix inconstistencies in SOLA REGISTRY\r\n";
+                                    parcelDuplicate += "Ba unit(s) [Volume/Folio]:\r\n" + baUnitList;
+                                    parcelDuplicate += "Parcel: plot " + co.getNameFirstpart() + "/" + co.getNameLastpart() + "\r\n";
+                                    parcelDuplicate += "===============================================\r\n";
                                 }
                                 baUnit.setCadastreObjectList(new ArrayList<CadastreObject>());
                                 baUnit.getCadastreObjectList().add(coExists.get(0));
-                            }
+//                            }
                         }
 
                         // Set BaUnit name
@@ -491,8 +493,9 @@ public class MigrationPageBean extends AbstractBackingBean {
         }
         log = String.format("Loaded %s claim(s)\r\n", claimsLoaded) + log;
         log = String.format("Found %s claim(s)\r\n", claimsTotal) + log;
-
+        if (parcelDuplicate != null) {  
         log = "===============================================\r\n"+parcelDuplicate + log;
+        }
     }
     //    private void addBaUnitDeatils(BaUnit baUnit, Claim claim, String code) {
     //        FieldPayload f = getFieldPayload(claim, code);
