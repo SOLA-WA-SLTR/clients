@@ -130,8 +130,10 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 nameLastPart = getStringFieldValue(f);
                             }
                             f = getFieldPayload(claim, "areaCofOhectares");
-                            if (f != null && f.getBigDecimalPayload() != null) {
-                                baUnitSize = f.getBigDecimalPayload().multiply(BigDecimal.valueOf(10000));
+                            if (f != null) {
+                                if (f.getBigDecimalPayload() != null) {
+                                 baUnitSize = f.getBigDecimalPayload().multiply(BigDecimal.valueOf(10000));
+                                }
                             }
                         }
 
@@ -174,7 +176,9 @@ public class MigrationPageBean extends AbstractBackingBean {
                             }
                             f = getFieldPayload(claim, "LGA");
                             if (f != null) {
+                              if  (getStringFieldValue(f) != null && getStringFieldValue(f) != "") { 
                                 co.setLgaCode(getStringFieldValue(f));
+                              }  
                             }
 
                             f = getFieldPayload(claim, "IntellMapSheet");
@@ -367,51 +371,66 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 nameLastPart = getStringFieldValue(f);
                             }
                             f = getFieldPayload(claim, "areaCofOhectares");
-                            if (f != null && f.getBigDecimalPayload() != null) {
-                                baUnitSize = f.getBigDecimalPayload().multiply(BigDecimal.valueOf(10000));
+                            if (f != null){
+                                if (f.getBigDecimalPayload() != null) {
+                                 baUnitSize = f.getBigDecimalPayload().multiply(BigDecimal.valueOf(10000));
+                                }
                             }
 
                             // Set cOfO
                             rrr.setCOfO(claim.getDescription());
                             // Set other details
                             f = getFieldPayload(claim, "advancePayment");
-                            if (f != null && f.getBigDecimalPayload() != null) {
-                                rrr.setAdvancePayment(f.getBigDecimalPayload());
+                            if (f != null) { 
+                                    if (f.getBigDecimalPayload() != null) {
+                                      rrr.setAdvancePayment(f.getBigDecimalPayload());
+                                    } 
                             }
                             f = getFieldPayload(claim, "yearlyRent");
-                            if (f != null && f.getBigDecimalPayload() != null) {
-                                rrr.setYearlyRent(f.getBigDecimalPayload());
+                            if (f != null) { 
+                                    if (f.getBigDecimalPayload() != null) {
+                                        rrr.setYearlyRent(f.getBigDecimalPayload());
+                                    }
                             }
                             f = getFieldPayload(claim, "reviewPeriod");
-                            if (f != null && f.getBigDecimalPayload() != null) {
-                                rrr.setReviewPeriod(f.getBigDecimalPayload().toBigInteger().intValue());
+                            if (f != null) {
+                                    if (f.getBigDecimalPayload() != null) {
+                                      rrr.setReviewPeriod(f.getBigDecimalPayload().toBigInteger().intValue());
+                                    }
+                            
                             }
                             f = getFieldPayload(claim, "term");
                             if (f != null && f.getBigDecimalPayload() != null) {
                                 rrr.setTerm(f.getBigDecimalPayload().toBigInteger().intValue());
                             }
                             f = getFieldPayload(claim, "dateSigned");
-                            if (f != null) {
-                                try {
-                                    rrr.setDateSigned(getDateFieldValue(f.getStringPayload()));
-                                } catch (java.text.ParseException ex) {
-                                    Logger.getLogger(MigrationPageBean.class.getName()).log(Level.SEVERE, null, ex);
-                                }
+                            if (f != null){
+                                if(f.getStringPayload() != null && f.getStringPayload() != "") {
+                                    try {
+                                        rrr.setDateSigned(getDateFieldValue(f.getStringPayload()));
+                                    } catch (java.text.ParseException ex) {
+                                        Logger.getLogger(MigrationPageBean.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }  
                             }
                             f = getFieldPayload(claim, "dateRegistered");
-                            if (f != null) {
-                                try {
-                                    rrr.setRegistrationDate(getDateFieldValue(f.getStringPayload()));
-                                } catch (java.text.ParseException ex) {
-                                    Logger.getLogger(MigrationPageBean.class.getName()).log(Level.SEVERE, null, ex);
-                                }
+                            if (f != null) { 
+                                    if (f.getStringPayload() != null && f.getStringPayload() != "") {
+                                        try {
+                                            rrr.setRegistrationDate(getDateFieldValue(f.getStringPayload()));
+                                        } catch (java.text.ParseException ex) {
+                                            Logger.getLogger(MigrationPageBean.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                    } 
                             }
                             f = getFieldPayload(claim, "dateCommenced");
-                            if (f != null) {
-                                try {
-                                    rrr.setDateCommenced(getDateFieldValue(f.getStringPayload()));
-                                } catch (java.text.ParseException ex) {
-                                    Logger.getLogger(MigrationPageBean.class.getName()).log(Level.SEVERE, null, ex);
+                            if (f != null){
+                                if (f.getStringPayload() != null && f.getStringPayload() != "") {
+                                    try {
+                                        rrr.setDateCommenced(getDateFieldValue(f.getStringPayload()));
+                                    } catch (java.text.ParseException ex) {
+                                        Logger.getLogger(MigrationPageBean.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                 }
                             }
 
@@ -425,7 +444,9 @@ public class MigrationPageBean extends AbstractBackingBean {
                             }
                             f = getFieldPayload(claim, "zone");
                             if (f != null) {
-                                rrr.setZoneCode(f.getStringPayload());
+                                    if (f.getStringPayload() != null && f.getStringPayload()!= "") {
+                                        rrr.setZoneCode(f.getStringPayload());
+                                    }
                             }
 
 //                            f = getFieldPayload(claim, "valueTodevelope");
