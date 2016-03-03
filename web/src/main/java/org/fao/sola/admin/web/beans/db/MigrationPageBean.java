@@ -5,11 +5,13 @@ import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKBReader;
 import com.vividsolutions.jts.io.WKBWriter;
 import com.vividsolutions.jts.io.WKTReader;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,21 +44,24 @@ import org.sola.services.common.faults.SOLAValidationException;
 import org.sola.services.digitalarchive.businesslogic.DigitalArchiveEJBLocal;
 import org.sola.services.digitalarchive.repository.entities.Document;
 import org.sola.services.ejb.address.repository.entities.Address;
-//import org.sola.services.ejb.application.businesslogic.ApplicationEJBLocal;
-//import org.sola.services.ejb.application.repository.entities.Application;
 import org.sola.services.ejb.administrative.businesslogic.AdministrativeEJBLocal;
 import org.sola.services.ejb.administrative.repository.entities.BaUnit;
 import org.sola.services.ejb.administrative.repository.entities.BaUnitArea;
 import org.sola.services.ejb.administrative.repository.entities.BaUnitNotation;
+import org.sola.services.ejb.administrative.repository.entities.BaUnitOT;
 import org.sola.services.ejb.administrative.repository.entities.ConditionForRrr;
 import org.sola.services.ejb.administrative.repository.entities.Rrr;
 import org.sola.services.ejb.administrative.repository.entities.RrrShare;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.cadastre.repository.entities.AddressForCadastreObject;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
+import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectOT;
 import org.sola.services.ejb.cadastre.repository.entities.NewCadastreObjectIdentifier;
+import org.sola.services.ejb.cadastre.repository.entities.SpatialValueArea;
 import org.sola.services.ejb.party.repository.entities.Party;
 import org.sola.services.ejb.source.repository.entities.Source;
+import org.sola.services.ejb.system.br.Result;
+import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
 import org.sola.services.ejb.system.repository.entities.BrValidation;
 
 /**
@@ -66,8 +71,8 @@ import org.sola.services.ejb.system.repository.entities.BrValidation;
 @ViewScoped
 public class MigrationPageBean extends AbstractBackingBean {
 
-//    @EJB
-//    ApplicationEJBLocal appEjb;
+    @EJB
+    SystemEJBLocal systemEJB;
 
     @EJB
     AdministrativeEJBLocal admEjb;
@@ -133,21 +138,18 @@ public class MigrationPageBean extends AbstractBackingBean {
                         // Get claim
                         Claim claim = claimEjb.getClaim(claimSearch.getId());
 
-                        
                         // Create Application and populate
 //                        Application application = new Application();
-                         
-                        
                         // Create BA unit and populate
-                        BaUnit baUnit = new BaUnit();
+                        BaUnitOT baUnit = new BaUnitOT();
                         baUnit.setRrrList(new ArrayList<Rrr>());
                         baUnit.setName(claim.getDescription());
 
                         // Dynamic form
-                        String nameFirstPart = "";
-                        String nameLastPart = "";
+                        String nameFirstPart = null;
+                        String nameLastPart = null;
                         String location = "";
-                        String state = "Anambra";
+                        String state = "AN";
                         String nationality = "Nigeria";
                         String lga = "";
                         String ward = "";
@@ -160,10 +162,13 @@ public class MigrationPageBean extends AbstractBackingBean {
                         BaUnitArea baUnitArea = new BaUnitArea();
                         baUnitArea.setBaUnitId(baUnit.getId());
                         baUnitArea.setTypeCode("officialArea");
-                        CadastreObject co = new CadastreObject();
+                        CadastreObjectOT co = new CadastreObjectOT();
                         NewCadastreObjectIdentifier nco = new NewCadastreObjectIdentifier();
                         Address coAddress = new Address();
                         AddressForCadastreObject addressforco = new AddressForCadastreObject();
+                        SpatialValueArea spa = new SpatialValueArea();
+
+                        Result newNumberResult = null;
 
                         //
                         if (claim.getDynamicForm() != null) {
@@ -174,7 +179,7 @@ public class MigrationPageBean extends AbstractBackingBean {
                             }
                             f = getFieldPayload(claim, "houseAddressNumberField");
                             if (f != null) {
-                                nameLastPart = location + ", " + getStringFieldValue(f);
+                                location = location + ", " + getStringFieldValue(f);
                             }
 
                             f = getFieldPayload(claim, "stateField");
@@ -194,7 +199,9 @@ public class MigrationPageBean extends AbstractBackingBean {
 
                             f = getFieldPayload(claim, "otherNationalityField");
                             if (f != null) {
-                                nationality = getStringFieldValue(f);
+                                if (getStringFieldValue(f) != null && getStringFieldValue(f) != "") {
+                                    nationality = getStringFieldValue(f);
+                                }
                             }
 
                             f = getFieldPayload(claim, "areaCofOhectares");
@@ -227,10 +234,10 @@ public class MigrationPageBean extends AbstractBackingBean {
                             Geometry geomwithsrid;
                             try {
                                 geom = wktReader.read(claim.getMappedGeometry());
-                                if (baUnitSize == null) {
-                                    baUnitArea.setTypeCode("calculatedArea");
-                                    baUnitArea.setSize(BigDecimal.valueOf(geom.getArea()));
-                                }
+//                                if (baUnitSize == null) {
+                                baUnitArea.setTypeCode("calculatedArea");
+                                baUnitArea.setSize(BigDecimal.valueOf(geom.getArea()));
+//                                }
                                 geom.setSRID(32632);
 
                                 WKBWriter wkbWriter = new WKBWriter();
@@ -238,8 +245,15 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 co.setGeomPolygon(wkbWriter.write(geom));
 
                                 nco = cadEjb.getNewCadastreObjectIdentifier(co.getGeomPolygon(), "mapped_geometry");
+
                                 nameFirstPart = nco.getFirstPart();
                                 nameLastPart = nco.getLastPart();
+
+                                spa.setSpatialUnitId(co.getId());
+                                spa.setTypeCode("officialArea");
+                                spa.setSize(BigDecimal.valueOf(geom.getArea()));
+                                co.setSpatialValueAreaList(new ArrayList<SpatialValueArea>());
+                                co.getSpatialValueAreaList().add(spa);
                             } catch (ParseException ex) {
                                 throw new RuntimeException(ex);
                             }
@@ -252,22 +266,40 @@ public class MigrationPageBean extends AbstractBackingBean {
                         if (!StringUtility.isEmpty(claim.getLandUseCode())) {
                             baUnit.setLandUse(claim.getLandUseCode());
                         }
-                        if (!StringUtility.isEmpty(nameFirstPart)) {
-                            baUnit.setNameFirstpart(nameFirstPart);
-                            co.setNameFirstpart(nameFirstPart);
-                        }
+
                         if (!StringUtility.isEmpty(nameLastPart)) {
                             baUnit.setNameLastpart(nameLastPart);
                             co.setNameLastpart(nameLastPart);
+                        } else {
+                            baUnit.setNameLastpart(state + '/' + lga + '/' + ward);
+                            co.setNameLastpart(state + '/' + lga + '/' + ward);
                         }
+                        if (!StringUtility.isEmpty(nameFirstPart)) {
+                            baUnit.setNameFirstpart(nameFirstPart);
+                            co.setNameFirstpart(nameFirstPart);
+                        } else {
+                            String result = "";
+                            HashMap<String, Serializable> params = new HashMap<String, Serializable>();
+                            params = new HashMap<String, Serializable>();
+                            params.put("last_part", state + '/' + lga + '/' + ward);
+                            params.put("cadastre_object_type", "parcel");
+                            newNumberResult = systemEJB.checkRuleGetResultSingle(
+                                    "generate-cadastre-object-firstpart", params);
+                            if (newNumberResult != null && newNumberResult.getValue() != null) {
+                                result = newNumberResult.getValue().toString();
+                                baUnit.setNameFirstpart(result);
+                                co.setNameFirstpart(result);
+                            }
+                        }
+
                         if (!StringUtility.isEmpty(claim.getLandUseCode())) {
                             baUnit.setLandUse(claim.getLandUseCode());
                         }
 
-                        List<CadastreObject> coExists = cadEjb.getCadastreObjectByAllParts(co.getNameFirstpart() + ' ' + co.getNameLastpart());
+                        List<CadastreObjectOT> coExists = cadEjb.getCadastreObjectOTByAllParts(co.getNameFirstpart() + ' ' + co.getNameLastpart());
                         String baUnitList = "";
                         if (coExists.size() == 0) {
-                            baUnit.setCadastreObjectList(new ArrayList<CadastreObject>());
+                            baUnit.setCadastreObjectList(new ArrayList<CadastreObjectOT>());
                             baUnit.getCadastreObjectList().add(co);
                         } else {
 
@@ -282,7 +314,7 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 parcelDuplicate += "Parcel: plot " + co.getNameFirstpart() + "/" + co.getNameLastpart() + "\r\n";
                                 parcelDuplicate += "===============================================\r\n";
                             }
-                            baUnit.setCadastreObjectList(new ArrayList<CadastreObject>());
+                            baUnit.setCadastreObjectList(new ArrayList<CadastreObjectOT>());
                             baUnit.getCadastreObjectList().add(coExists.get(0));
                         }
 
@@ -374,7 +406,7 @@ public class MigrationPageBean extends AbstractBackingBean {
                                     doc.setBody(attachBinary.getBody());
                                     doc.setDescription(attachBinary.getDescription());
                                     doc.setExtension(attachBinary.getFileExtension());
-//                  TO BE ADDED                  doc.setMimeType(attachBinary.getMimeType());
+                                    doc.setMimeType(attachBinary.getMimeType());
                                     archiveEjb.createDocument(doc);
                                     source.setArchiveDocumentId(doc.getId());
                                 }
