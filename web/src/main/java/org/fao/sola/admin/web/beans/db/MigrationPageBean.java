@@ -236,7 +236,8 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 geom = wktReader.read(claim.getMappedGeometry());
 //                                if (baUnitSize == null) {
                                 baUnitArea.setTypeCode("calculatedArea");
-                                baUnitArea.setSize(BigDecimal.valueOf(geom.getArea()));
+                                baUnitArea.setSize(BigDecimal.valueOf(claim.getClaimArea()));
+                                
 //                                }
                                 geom.setSRID(32632);
 
@@ -251,7 +252,7 @@ public class MigrationPageBean extends AbstractBackingBean {
 
                                 spa.setSpatialUnitId(co.getId());
                                 spa.setTypeCode("officialArea");
-                                spa.setSize(BigDecimal.valueOf(geom.getArea()));
+                                spa.setSize(BigDecimal.valueOf(claim.getClaimArea()));
                                 co.setSpatialValueAreaList(new ArrayList<SpatialValueArea>());
                                 co.getSpatialValueAreaList().add(spa);
                             } catch (ParseException ex) {
