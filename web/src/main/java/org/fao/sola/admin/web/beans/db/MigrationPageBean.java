@@ -2,19 +2,15 @@ package org.fao.sola.admin.web.beans.db;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
-import com.vividsolutions.jts.io.WKBReader;
 import com.vividsolutions.jts.io.WKBWriter;
 import com.vividsolutions.jts.io.WKTReader;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -37,7 +33,6 @@ import org.sola.cs.services.ejbs.claim.entities.FieldPayload;
 import org.sola.cs.services.ejbs.claim.entities.FieldType;
 import org.sola.cs.services.ejbs.claim.entities.SectionElementPayload;
 import org.sola.cs.services.ejbs.claim.entities.SectionPayload;
-import org.sola.services.common.EntityAction;
 import org.sola.services.common.br.ValidationResult;
 import org.sola.services.common.faults.FaultUtility;
 import org.sola.services.common.faults.SOLAValidationException;
@@ -49,12 +44,11 @@ import org.sola.services.ejb.administrative.repository.entities.BaUnit;
 import org.sola.services.ejb.administrative.repository.entities.BaUnitArea;
 import org.sola.services.ejb.administrative.repository.entities.BaUnitNotation;
 import org.sola.services.ejb.administrative.repository.entities.BaUnitOT;
-import org.sola.services.ejb.administrative.repository.entities.ConditionForRrr;
 import org.sola.services.ejb.administrative.repository.entities.Rrr;
 import org.sola.services.ejb.administrative.repository.entities.RrrShare;
+import org.sola.services.ejb.application.businesslogic.ApplicationEJBLocal;
 import org.sola.services.ejb.cadastre.businesslogic.CadastreEJBLocal;
 import org.sola.services.ejb.cadastre.repository.entities.AddressForCadastreObject;
-import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObjectOT;
 import org.sola.services.ejb.cadastre.repository.entities.NewCadastreObjectIdentifier;
 import org.sola.services.ejb.cadastre.repository.entities.SpatialValueArea;
@@ -63,6 +57,8 @@ import org.sola.services.ejb.source.repository.entities.Source;
 import org.sola.services.ejb.system.br.Result;
 import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
 import org.sola.services.ejb.system.repository.entities.BrValidation;
+import org.sola.services.ejb.application.repository.entities.Application;
+import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 
 /**
  * Contains methods to migrate claims into SOLA Registry tables
@@ -91,6 +87,9 @@ public class MigrationPageBean extends AbstractBackingBean {
 
     @EJB
     CadastreEJBLocal cadEjb;
+    
+    @EJB
+    ApplicationEJBLocal appEjb;
 
     private String log;
 
@@ -433,6 +432,32 @@ public class MigrationPageBean extends AbstractBackingBean {
                             // Change claim status
                             claimAdminEjb.changeClaimStatus(claim.getId(), ClaimStatusConstants.MODERATED);
                         }
+                        
+                        // Create application
+                        Application app = new Application();
+                        Party contactPerson = new Party();
+                        Address contactPersonAddress = new Address();
+                        contactPersonAddress.setDescription(claim.getClaimant().getAddress());
+                        
+                        contactPerson.setAddress(contactPersonAddress);
+                        contactPerson.setDob(claim.getClaimant().getBirthDate());
+                        contactPerson.setEmail(claim.getClaimant().getEmail());
+                        contactPerson.setGenderCode(claim.getClaimant().getGenderCode());
+                        contactPerson.setIdNumber(claim.getClaimant().getIdNumber());
+                        contactPerson.setIdTypeCode(claim.getClaimant().getIdTypeCode());
+                        contactPerson.setLastName(claim.getClaimant().getLastName());
+                        contactPerson.setMobile(claim.getClaimant().getMobilePhone());
+                        contactPerson.setName(claim.getClaimant().getName());
+                        contactPerson.setPhone(claim.getClaimant().getPhone());
+                        if(claim.getClaimant().isPerson()){
+                            contactPerson.setTypeCode("naturalPerson");
+                        } else {
+                            contactPerson.setTypeCode("nonNaturalPerson");
+                        }
+                        
+                        app.setContactPerson(contactPerson);
+                        List<CadastreObject> coList = new ArrayList<>();
+                        app.setCadastreObjectList(null);
                     }
                 }
                 );
