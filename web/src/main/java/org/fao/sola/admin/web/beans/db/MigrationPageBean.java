@@ -58,6 +58,8 @@ import org.sola.services.ejb.system.br.Result;
 import org.sola.services.ejb.system.businesslogic.SystemEJBLocal;
 import org.sola.services.ejb.system.repository.entities.BrValidation;
 import org.sola.services.ejb.application.repository.entities.Application;
+import org.sola.services.ejb.application.repository.entities.ApplicationProperty;
+import org.sola.services.ejb.application.repository.entities.Service;
 import org.sola.services.ejb.cadastre.repository.entities.CadastreObject;
 
 /**
@@ -87,7 +89,7 @@ public class MigrationPageBean extends AbstractBackingBean {
 
     @EJB
     CadastreEJBLocal cadEjb;
-    
+
     @EJB
     ApplicationEJBLocal appEjb;
 
@@ -236,7 +238,7 @@ public class MigrationPageBean extends AbstractBackingBean {
 //                                if (baUnitSize == null) {
                                 baUnitArea.setTypeCode("calculatedArea");
                                 baUnitArea.setSize(BigDecimal.valueOf(claim.getClaimArea()));
-                                
+
 //                                }
                                 geom.setSRID(32632);
 
@@ -395,7 +397,9 @@ public class MigrationPageBean extends AbstractBackingBean {
                         // Documents
                         rrr.setSourceList(new ArrayList<Source>());
                         baUnit.setSourceList(new ArrayList<Source>());
-
+                        
+                        Source claimSummary = new Source();
+                        
                         if (claim.getAttachments() != null) {
                             for (Attachment attachment : claim.getAttachments()) {
                                 Source source = new Source();
@@ -416,6 +420,10 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 source.setReferenceNr(attachment.getReferenceNr());
                                 source.setTypeCode(attachment.getTypeCode());
                                 source.setContent(claim.getDescription());
+                                
+                                if (source.getTypeCode().contentEquals("claimSummary")) {
+                                    claimSummary = source;
+                                }
 //                                // Add to RRR
                                 rrr.getSourceList().add(source);
                             }
@@ -425,20 +433,20 @@ public class MigrationPageBean extends AbstractBackingBean {
                         baUnit.setRrrList(new ArrayList<Rrr>());
                         baUnit.getRrrList().add(rrr);
 
-                        // Import BaUnit
-                        if (admEjb.importBaUnit(baUnit, claim.getNr())) {
-                            // Save BaUnit calculated area
-                            admEjb.createBaUnitArea(baUnit.getId(), baUnitArea);
-                            // Change claim status
-                            claimAdminEjb.changeClaimStatus(claim.getId(), ClaimStatusConstants.MODERATED);
-                        }
-                        
+//                        // Import BaUnit
+//                        if (admEjb.importBaUnit(baUnit)) {
+//                            // Save BaUnit calculated area
+//                            admEjb.createBaUnitArea(baUnit.getId(), baUnitArea);
+//                            // Change claim status
+//                            claimAdminEjb.changeClaimStatus(claim.getId(), ClaimStatusConstants.MODERATED);
+//                        }
+
                         // Create application
                         Application app = new Application();
                         Party contactPerson = new Party();
                         Address contactPersonAddress = new Address();
                         contactPersonAddress.setDescription(claim.getClaimant().getAddress());
-                        
+
                         contactPerson.setAddress(contactPersonAddress);
                         contactPerson.setDob(claim.getClaimant().getBirthDate());
                         contactPerson.setEmail(claim.getClaimant().getEmail());
@@ -449,15 +457,54 @@ public class MigrationPageBean extends AbstractBackingBean {
                         contactPerson.setMobile(claim.getClaimant().getMobilePhone());
                         contactPerson.setName(claim.getClaimant().getName());
                         contactPerson.setPhone(claim.getClaimant().getPhone());
-                        if(claim.getClaimant().isPerson()){
+                        if (claim.getClaimant().isPerson()) {
                             contactPerson.setTypeCode("naturalPerson");
                         } else {
                             contactPerson.setTypeCode("nonNaturalPerson");
                         }
-                        
+                        app.setNr(claim.getNr());
                         app.setContactPerson(contactPerson);
                         List<CadastreObject> coList = new ArrayList<>();
                         app.setCadastreObjectList(null);
+                        
+                        // Set application property for Application
+                        ApplicationProperty appProp = new ApplicationProperty();
+                        appProp.setBaUnitId(baUnit.getId());
+                        appProp.setApplicationId(app.getId());
+                        app.setPropertyList(new ArrayList<ApplicationProperty>());
+                        app.getPropertyList().add(appProp);
+                        
+                        // Add services to Application
+                        Service sltrService = new Service();
+                        sltrService.setApplicationId(app.getId());
+                        sltrService.setRequestTypeCode("systematicRegn");
+                        Service redcadService = new Service();
+                        redcadService.setApplicationId(app.getId());
+                        redcadService.setRequestTypeCode("redefineCadastre");
+                        String redcadId = redcadService.getId();
+                        String sltrId =   sltrService.getId();
+                        app.setServiceList(new ArrayList<Service>());
+                        app.getServiceList().add(sltrService);
+                        app.getServiceList().add(redcadService);
+                       
+                        
+                        //  add document ClaimSummary to application
+                        app.setSourceList(new ArrayList<Source>());
+                        if (claimSummary.getTypeCode().contentEquals("claimSummary")) {
+                            claimSummary.setTypeCode("systematicRegn");
+                            app.getSourceList().add(claimSummary);
+                        }
+                        
+                        // Import Application
+                        if (appEjb.importApplication(app)){
+                            // Import BaUnit
+                            if (admEjb.importBaUnit(baUnit, redcadId, sltrId)) {
+                                // Save BaUnit calculated area
+                                admEjb.createBaUnitArea(baUnit.getId(), baUnitArea);
+                                // Change claim status
+                                claimAdminEjb.changeClaimStatus(claim.getId(), ClaimStatusConstants.MODERATED);
+                            }
+                        }
                     }
                 }
                 );
