@@ -134,6 +134,19 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.sola.services.ejbs</groupId>
+            <artifactId>sola-application</artifactId>
+            <version>${registryVersion}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+            <type>ejb</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.sola.cs.services.ejbs</groupId>
             <artifactId>sola-cs-claim</artifactId>
             <version>1504a</version>
