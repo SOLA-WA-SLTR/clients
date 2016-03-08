@@ -427,7 +427,7 @@ public class MigrationPageBean extends AbstractBackingBean {
                         baUnit.getRrrList().add(rrr);
 
                         // Import BaUnit
-                        if (admEjb.importBaUnit(baUnit)) {
+                        if (admEjb.importBaUnit(baUnit, claim.getNr())) {
                             // Save BaUnit calculated area
                             admEjb.createBaUnitArea(baUnit.getId(), baUnitArea);
                             // Change claim status
