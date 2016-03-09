@@ -469,8 +469,9 @@ public class MigrationPageBean extends AbstractBackingBean {
                         
                         // Set application property for Application
                         ApplicationProperty appProp = new ApplicationProperty();
-                        appProp.setBaUnitId(baUnit.getId());
                         appProp.setApplicationId(app.getId());
+                        appProp.setNameFirstpart(baUnit.getNameFirstpart());
+                        appProp.setNameLastpart(baUnit.getNameLastpart());
                         app.setPropertyList(new ArrayList<ApplicationProperty>());
                         app.getPropertyList().add(appProp);
                         
