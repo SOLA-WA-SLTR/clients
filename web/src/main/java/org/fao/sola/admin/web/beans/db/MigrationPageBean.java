@@ -479,6 +479,7 @@ public class MigrationPageBean extends AbstractBackingBean {
                         Service sltrService = new Service();
                         sltrService.setApplicationId(app.getId());
                         sltrService.setRequestTypeCode("systematicRegn");
+                        sltrService.setServiceOrder(1);
                         Service redcadService = new Service();
                         redcadService.setApplicationId(app.getId());
                         redcadService.setRequestTypeCode("redefineCadastre");
