@@ -271,7 +271,7 @@ public class MigrationPageBean extends AbstractBackingBean {
                         Rrr rrr = new Rrr();
                         rrr.setBaUnitId(baUnit.getId());
                         rrr.setPrimary(true);
-                        rrr.setRegistrationDate(Calendar.getInstance().getTime());
+//                        rrr.setRegistrationDate(Calendar.getInstance().getTime());
                         if (!StringUtility.isEmpty(claim.getTypeCode())) {
                             rrr.setTypeCode(claim.getTypeCode());
                         } else {
@@ -420,6 +420,7 @@ public class MigrationPageBean extends AbstractBackingBean {
                                             rrr.setRegistrationDate(getDateFieldValue(f.getStringPayload()));
                                         } catch (java.text.ParseException ex) {
                                             Logger.getLogger(MigrationPageBean.class.getName()).log(Level.SEVERE, null, ex);
+                                            rrr.setRegistrationDate(Calendar.getInstance().getTime());
                                         }
                                     } 
                             }
