@@ -94,7 +94,9 @@ public class MigrationPageBean extends AbstractBackingBean {
     ApplicationEJBLocal appEjb;
 
     private String log;
-
+    
+    private int claimsNotLoaded = 0;
+    
     private String parcelDuplicate;
 
     public String getLog() {
@@ -492,10 +494,12 @@ public class MigrationPageBean extends AbstractBackingBean {
                         
                         //  add document ClaimSummary to application
                         app.setSourceList(new ArrayList<Source>());
-                        if (claimSummary.getTypeCode().contentEquals("claimSummary")) {
-                            claimSummary.setTypeCode("systematicRegn");
-                            app.getSourceList().add(claimSummary);
-                        }
+                        if (claimSummary.getTypeCode()!= null){
+                            if (claimSummary.getTypeCode().contentEquals("claimSummary")) {
+                                claimSummary.setTypeCode("systematicRegn");
+                                app.getSourceList().add(claimSummary);
+                            }
+                        
                         
                         // Import Application
                         if (appEjb.importApplication(app)){
@@ -507,14 +511,19 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 claimAdminEjb.changeClaimStatus(claim.getId(), ClaimStatusConstants.MODERATED);
                             }
                         }
+                        } else {
+                         log  = "You have to attach a Claim Summary to the claim "+claim.getNr()+"\r\n";
+                         claimsNotLoaded +=1;
+                        }
                     }
                 }
                 );
-                claimsLoaded += 1;
+                claimsLoaded += 1-claimsNotLoaded;
 
             } catch (Exception e) {
                 LogUtility.log("Failed to load claim", e);
                 claimsFailed += 1;
+                              
                 log += String.format("Failed to load claim #%s with the follwoing error:\r\n", claimSearch.getNr());
 
                 if (FaultUtility.hasCause(e, SOLAValidationException.class)) {
@@ -543,6 +552,7 @@ public class MigrationPageBean extends AbstractBackingBean {
         // Put summary on top of the log
         log = "===============================================\r\n" + log;
 
+        
         if (claimsFailed > 0) {
             log = String.format("Failed %s claim(s)\r\n", claimsFailed) + log;
         }
