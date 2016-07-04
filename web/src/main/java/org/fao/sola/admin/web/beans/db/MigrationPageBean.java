@@ -499,7 +499,8 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 claimSummary.setTypeCode("systematicRegn");
                                 app.getSourceList().add(claimSummary);
                             }
-                        
+                            
+                          app.setSourceList(rrr.getSourceList());
                         
                         // Import Application
                         if (appEjb.importApplication(app)){
