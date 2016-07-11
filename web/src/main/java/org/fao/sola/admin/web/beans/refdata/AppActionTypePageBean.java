@@ -1,5 +1,6 @@
 package org.fao.sola.admin.web.beans.refdata;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -8,7 +9,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.fao.sola.admin.web.beans.AbstractBackingBean;
 import org.fao.sola.admin.web.beans.helpers.ErrorKeys;
-import org.fao.sola.admin.web.beans.helpers.MessageBean;
 import org.fao.sola.admin.web.beans.helpers.MessageProvider;
 import org.fao.sola.admin.web.beans.language.LanguageBean;
 import org.fao.sola.admin.web.beans.localization.LocalizedValuesListBean;
@@ -72,6 +72,7 @@ public class AppActionTypePageBean extends AbstractBackingBean {
         // Load application statuses
         List<ApplicationStatusType> appStatusesList = refEjb.getCodeEntityList(ApplicationStatusType.class, languageBean.getLocale());
         if(appStatusesList != null){
+            appStatusesList = (ArrayList<ApplicationStatusType>)((ArrayList)appStatusesList).clone();
             // Add dummy
             ApplicationStatusType dummy = new ApplicationStatusType();
             dummy.setCode("");

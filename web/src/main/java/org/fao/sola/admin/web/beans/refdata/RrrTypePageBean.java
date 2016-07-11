@@ -1,5 +1,6 @@
 package org.fao.sola.admin.web.beans.refdata;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -31,7 +32,7 @@ public class RrrTypePageBean extends AbstractBackingBean {
     private List<RrrType> rrrTypes;
     private ConfigPanelLauncher[] configPanelLaunchers;
     private RrrGroupType[] rrrGroupTypes;
-    
+        
     @Inject
     MessageBean msg;
 
@@ -79,6 +80,7 @@ public class RrrTypePageBean extends AbstractBackingBean {
         List<RrrGroupType> rrrGroupTypesList = refEjb.getCodeEntityList(RrrGroupType.class, languageBean.getLocale());
         
         if (configPanelLauncherList != null) {
+            configPanelLauncherList = (ArrayList<ConfigPanelLauncher>)((ArrayList)configPanelLauncherList).clone();
             // Add dummy
             ConfigPanelLauncher dummy = new ConfigPanelLauncher();
             dummy.setCode("");
@@ -88,6 +90,7 @@ public class RrrTypePageBean extends AbstractBackingBean {
         }
         
         if (rrrGroupTypesList != null) {
+            rrrGroupTypesList = (ArrayList<RrrGroupType>)((ArrayList)rrrGroupTypesList).clone();
             // Add dummy
             RrrGroupType dummy = new RrrGroupType();
             dummy.setCode("");

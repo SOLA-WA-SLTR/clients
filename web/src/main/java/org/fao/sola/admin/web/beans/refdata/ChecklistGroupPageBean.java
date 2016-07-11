@@ -82,6 +82,7 @@ public class ChecklistGroupPageBean extends AbstractBackingBean {
         // Load supporting lists
         List<CheckListItem> checklistItemList = refEjb.getCodeEntityList(CheckListItem.class, languageBean.getLocale());
         if (checklistItemList != null) {
+            checklistItemList = (ArrayList<CheckListItem>)((ArrayList)checklistItemList).clone();
             checklistItems = checklistItemList.toArray(new CheckListItem[checklistItemList.size()]);
         }
     }

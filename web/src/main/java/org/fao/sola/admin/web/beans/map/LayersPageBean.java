@@ -105,10 +105,12 @@ public class LayersPageBean extends AbstractBackingBean {
     
     private void loadList() {
         layers = systemEjb.getConfigMapLayers(null);
+        layers = (ArrayList<ConfigMapLayer>)((ArrayList)layers).clone();
     }
     
     private void loadQueries(){
         queries = systemEjb.getQueries(languageBean.getLocale());
+        queries = (ArrayList<Query>)((ArrayList)queries).clone();
         Query dummyQuery = new Query();
         dummyQuery.setName("");
         queries.add(0, dummyQuery);
