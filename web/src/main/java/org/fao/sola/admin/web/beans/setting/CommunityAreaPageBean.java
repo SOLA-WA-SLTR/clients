@@ -43,9 +43,14 @@ public class CommunityAreaPageBean extends AbstractBackingBean {
 
     private List<ConfigMapLayer> layers;
     private Setting communityArea;
+    private boolean isOffline;
 
     public Setting getCommunityArea() {
         return communityArea;
+    }
+
+    public boolean getIsOffline() {
+        return isOffline;
     }
 
     public List<ConfigMapLayer> getLayers() {
@@ -66,6 +71,7 @@ public class CommunityAreaPageBean extends AbstractBackingBean {
         }
         layers = searchEjb.getConfigMapLayerList(langBean.getLocale());
         communityArea = systemEjb.getSetting(ConfigConstants.OT_COMMUNITY_AREA);
+        isOffline = systemEjb.getSetting(ConfigConstants.OT_OFFLINE_MODE, "0").equals("1");
     }
 
     public void save() {

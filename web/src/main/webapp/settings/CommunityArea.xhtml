@@ -50,7 +50,7 @@
                             <ui:fragment rendered = "#{l.typeCode eq 'wms' and l.useForOpenTenure}">
                                 // Add WMS layers
                                 layers.push(new OpenLayers.Layer.WMS("#{l.title}", "#{l.url}",
-                                {layers: '#{l.wmsLayers}', transparent: 'true'}));
+                                {layers: '#{l.wmsLayers}', transparent: 'false'}));
                             </ui:fragment>
                         </ui:repeat>
 
@@ -71,6 +71,7 @@
                         mapControl = new OT.Map({
                             isMapEditable: true,
                             mapHeight: 500,
+                            isOffline: #{communityAreaPageBean.isOffline},
                             maxExtentBounds: maxExtentBounds,
                             initialZoomBounds: initialZoomBounds,
                             applicationUrl: "#{communityAreaPageBean.applicationUrl}",

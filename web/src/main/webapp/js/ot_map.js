@@ -35,6 +35,9 @@ OT.Map = function(mapOptions) {
 
     // Boolean flag, indicating whether map can be edited. If false, editing tools will be hidden
     var isMapEditable = mapOptions.isMapEditable ? mapOptions.isMapEditable : false;
+    
+    // Boolean flag, indicating whether CS is offline or not
+    var isOffline = mapOptions.isOffline ? mapOptions.isOffline : false;
 
     // Map toolbar reference
     var mapToolbar;
@@ -153,9 +156,15 @@ OT.Map = function(mapOptions) {
         zoom: 5
     });
 
-    var gsat = new OpenLayers.Layer.Google("Google Earth", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
-    var gmap = new OpenLayers.Layer.Google("Google Map", {numZoomLevels: 20, visibility: false});
-    map.addLayers([gsat, gmap]);
+    try {
+        if(!isOffline){
+            var gsat = new OpenLayers.Layer.Google(MSG.MAP_CONTROL_GOOGLE_EARTH, {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
+            var gmap = new OpenLayers.Layer.Google(MSG.MAP_CONTROL_GOOGLE_MAP, {numZoomLevels: 20, visibility: false});
+            map.addLayers([gsat, gmap]);
+        }
+    } catch (e) {
+        
+    }
    
     if (layers.length > 0) {
         map.addLayers(layers);
