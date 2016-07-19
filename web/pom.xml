@@ -26,7 +26,7 @@
         <services.group.id>org.nga.sola.admin.services</services.group.id>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <registryVersion>1607c</registryVersion>
+        <registryVersion>1607d</registryVersion>
     </properties>
     
     <dependencies>
