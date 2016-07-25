@@ -16,6 +16,7 @@ import org.sola.common.ConfigConstants;
 import org.sola.common.StringUtility;
 import org.sola.admin.services.ejb.search.businesslogic.SearchAdminEJBLocal;
 import org.sola.admin.services.ejb.search.repository.entities.ConfigMapLayer;
+import org.sola.admin.services.ejb.search.repository.entities.ConfigMapLayerMetadata;
 import org.sola.admin.services.ejb.system.businesslogic.SystemAdminEJBLocal;
 import org.sola.admin.services.ejb.system.repository.entities.Setting;
 
@@ -74,6 +75,71 @@ public class CommunityAreaPageBean extends AbstractBackingBean {
         isOffline = systemEjb.getSetting(ConfigConstants.OT_OFFLINE_MODE, "0").equals("1");
     }
 
+    /** Returns WMS layer parameters sent to the server. */
+    public String getLayerParamsString(ConfigMapLayer layer, boolean addCommaInFront) {
+        if (layer == null || layer.getMetadataList() == null) {
+            return "";
+        }
+
+        String result = "";
+
+        for (ConfigMapLayerMetadata param : layer.getMetadataList()) {
+            if (!param.isForClient() && layer.getTypeCode().equalsIgnoreCase("wms") 
+                    && !param.getName().equalsIgnoreCase("LEGEND_OPTIONS")) {
+                if (!result.equals("")) {
+                    result += ", ";
+                }
+                result += param.getName() + ": '" + param.getValue() + "'";
+            }
+        }
+
+        if (!result.equals("") && addCommaInFront) {
+            result = ", " + result;
+        }
+        return result;
+    }
+    
+    /**
+     * Return WMS legend options
+     */
+    public String getLegendOptions(ConfigMapLayer layer) {
+        if (layer == null || layer.getMetadataList() == null) {
+            return "";
+        }
+
+        for (ConfigMapLayerMetadata param : layer.getMetadataList()) {
+            if (param.getName().equalsIgnoreCase("LEGEND_OPTIONS")) {
+                return param.getValue();
+            }
+        }
+
+        return "''";
+    }
+    
+    /** Returns WMS layer options used by map component. */
+    public String getLayerOptionsString(ConfigMapLayer layer, boolean addCommaInFront) {
+        if (layer == null || layer.getMetadataList() == null) {
+            return "";
+        }
+
+        String result = "";
+
+        for (ConfigMapLayerMetadata param : layer.getMetadataList()) {
+            if (param.isForClient() && layer.getTypeCode().equalsIgnoreCase("wms") 
+                    && !param.getName().equalsIgnoreCase("LEGEND_OPTIONS")) {
+                if (!result.equals("")) {
+                    result += ", ";
+                }
+                result += param.getName() + ": '" + param.getValue() + "'";
+            }
+        }
+
+        if (!result.equals("") && addCommaInFront) {
+            result = ", " + result;
+        }
+        return result;
+    }
+    
     public void save() {
         if (communityArea == null || StringUtility.isEmpty(communityArea.getValue())) {
             getContext().addMessage(null, new FacesMessage(msgProvider.getErrorMessage(ErrorKeys.MAP_CONTROL_PROVIDE_COMMUNITY_AREA)));

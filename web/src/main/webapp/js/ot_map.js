@@ -163,11 +163,29 @@ OT.Map = function(mapOptions) {
             map.addLayers([gsat, gmap]);
         }
     } catch (e) {
-        
+
     }
-   
+
     if (layers.length > 0) {
         map.addLayers(layers);
+    }
+
+    // Check for base layers
+    var hasBaseLayer = false;
+    if(map.layers.length > 0){
+        for (var i = 0; i < map.layers.length; i++) {
+            if(map.layers[i].isBaseLayer === true){
+                hasBaseLayer = true;
+                break;
+            }
+        }
+    }
+    
+    if(!hasBaseLayer){
+        // Add dummy base layer
+        var emptyBase = new OpenLayers.Layer("Empty",{isBaseLayer: true});
+        map.addLayers([emptyBase]);
+        map.setLayerIndex(emptyBase, 0);
     }
     
     map.events.register('changelayer', map, handleLayerChange);

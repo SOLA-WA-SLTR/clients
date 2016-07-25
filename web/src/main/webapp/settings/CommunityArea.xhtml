@@ -49,8 +49,11 @@
                         <ui:repeat var = "l" value="#{communityAreaPageBean.layersArray}" varStatus="r">
                             <ui:fragment rendered = "#{l.typeCode eq 'wms' and l.useForOpenTenure}">
                                 // Add WMS layers
-                                layers.push(new OpenLayers.Layer.WMS("#{l.title}", "#{l.url}",
-                                {layers: '#{l.wmsLayers}', transparent: 'false'}));
+                                var wmsLayer = new OpenLayers.Layer.WMS("#{l.title}", "#{l.url}",
+                                    {layers: '#{l.wmsLayers}' #{communityAreaPageBean.getLayerParamsString(l, true)}},
+                                    {#{communityAreaPageBean.getLayerOptionsString(l, false)}});
+                                wmsLayer.legendOptions = "#{communityAreaPageBean.getLegendOptions(l)}";
+                                layers.push(wmsLayer);
                             </ui:fragment>
                         </ui:repeat>
 
