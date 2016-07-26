@@ -149,17 +149,18 @@ OT.Map = function(mapOptions) {
     map = new OpenLayers.Map('map', {
         div: "map",
         allOverlays: false,
-        maxResolution: 19.296875,
         projection: this.destCrs,
         displayProjection: this.sourceCrs,
+        maxExtentBounds: this.maxExtentBounds,
+        initialZoomBounds: this.initialZoomBounds,
         units: 'm',
-        zoom: 5
+        zoom: 22
     });
 
     try {
         if(!isOffline){
-            var gsat = new OpenLayers.Layer.Google(MSG.MAP_CONTROL_GOOGLE_EARTH, {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
-            var gmap = new OpenLayers.Layer.Google(MSG.MAP_CONTROL_GOOGLE_MAP, {numZoomLevels: 20, visibility: false});
+            var gsat = new OpenLayers.Layer.Google("Google Earth", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
+            var gmap = new OpenLayers.Layer.Google("Google Map", {numZoomLevels: 20, visibility: false});
             map.addLayers([gsat, gmap]);
         }
     } catch (e) {
