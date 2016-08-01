@@ -1,5 +1,6 @@
 package org.fao.sola.admin.web.beans.br;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -66,6 +67,7 @@ public class BrListPageBean extends AbstractBackingBean {
         List<BrValidationTargetType> targetTypesList = refEjb.getCodeEntityList(BrValidationTargetType.class, langBean.getLocale());
 
         if (techTypesList != null) {
+            techTypesList = (ArrayList<BrTechnicalType>)((ArrayList)techTypesList).clone();
             BrTechnicalType dummy = new BrTechnicalType();
             dummy.setCode("");
             dummy.setDisplayValue(" ");
@@ -74,6 +76,7 @@ public class BrListPageBean extends AbstractBackingBean {
         }
 
         if (targetTypesList != null) {
+            targetTypesList = (ArrayList<BrValidationTargetType>)((ArrayList)targetTypesList).clone();
             BrValidationTargetType dummy = new BrValidationTargetType();
             dummy.setCode("");
             dummy.setDisplayValue(" ");

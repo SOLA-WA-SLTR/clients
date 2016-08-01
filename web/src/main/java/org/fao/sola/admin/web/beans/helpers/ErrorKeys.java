@@ -283,4 +283,12 @@ public class ErrorKeys {
     
     /** Cache has not been reset. CacheEJB may not be found */
     public static final String RESET_CACHE_PAGE_FAILED = "RESET_CACHE_PAGE_FAILED";
+    
+    // Administrative
+    
+    /** Enter template name */
+    public static final String ADMINISTRATIVE_LEASE_CONDITIONS_NAME_IS_NULL = "ADMINISTRATIVE_LEASE_CONDITIONS_NAME_IS_NULL";
+    
+    /** Enter conditions text */
+    public static final String ADMINISTRATIVE_LEASE_CONDITIONS_TEXT_IS_NULL = "ADMINISTRATIVE_LEASE_CONDITIONS_TEXT_IS_NULL";
 }

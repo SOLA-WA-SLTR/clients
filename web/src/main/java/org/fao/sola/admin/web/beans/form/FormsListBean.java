@@ -3,6 +3,7 @@ package org.fao.sola.admin.web.beans.form;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -51,6 +52,7 @@ public class FormsListBean extends AbstractBackingBean {
     @PostConstruct
     private void init() {
         List<FormTemplate> formsList = claimEjb.getFormTemplates(null);
+        formsList = (ArrayList<FormTemplate>)((ArrayList)formsList).clone();
         if (formsList != null) {
             forms = formsList.toArray(new FormTemplate[formsList.size()]);
         }

@@ -127,6 +127,7 @@ public class RequestTypePageBean extends AbstractBackingBean {
         }
         
         if (displayGroupList != null) {
+            displayGroupList = (ArrayList<RequestDisplayGroup>)((ArrayList)displayGroupList).clone();
             // Add dummy
             RequestDisplayGroup dummy = new RequestDisplayGroup();
             dummy.setCode("");
@@ -136,6 +137,7 @@ public class RequestTypePageBean extends AbstractBackingBean {
         }
         
         if (requestCategoryTypeList != null) {
+            requestCategoryTypeList = (ArrayList<RequestCategoryType>)((ArrayList)requestCategoryTypeList).clone();
             // Add dummy
             RequestCategoryType dummy = new RequestCategoryType();
             dummy.setCode("");
@@ -145,6 +147,7 @@ public class RequestTypePageBean extends AbstractBackingBean {
         }
 
         if (rrrTypeList != null) {
+            rrrTypeList = (ArrayList<RrrType>)((ArrayList)rrrTypeList).clone();
             // Add dummy
             RrrType dummy = new RrrType();
             dummy.setCode("");
@@ -154,6 +157,7 @@ public class RequestTypePageBean extends AbstractBackingBean {
         }
 
         if (configPanelLauncherList != null) {
+            configPanelLauncherList = (ArrayList<ConfigPanelLauncher>)((ArrayList)configPanelLauncherList).clone();
             // Add dummy
             ConfigPanelLauncher dummy = new ConfigPanelLauncher();
             dummy.setCode("");
@@ -163,6 +167,7 @@ public class RequestTypePageBean extends AbstractBackingBean {
         }
 
         if (typeActionList != null) {
+            typeActionList = (ArrayList<TypeAction>)((ArrayList)typeActionList).clone();
             // Add dummy
             TypeAction dummy = new TypeAction();
             dummy.setCode("");

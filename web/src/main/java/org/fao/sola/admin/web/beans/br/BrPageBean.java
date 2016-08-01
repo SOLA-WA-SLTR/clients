@@ -158,6 +158,7 @@ public class BrPageBean extends AbstractBackingBean {
 
         // Load lists
         if (technicalTypesList != null) {
+            technicalTypesList = (ArrayList<BrTechnicalType>)((ArrayList)technicalTypesList).clone();
             BrTechnicalType dummy = new BrTechnicalType();
             dummy.setCode("");
             dummy.setDisplayValue(" ");
@@ -165,6 +166,7 @@ public class BrPageBean extends AbstractBackingBean {
             technicalTypes = technicalTypesList.toArray(new BrTechnicalType[technicalTypesList.size()]);
         }
         if (severityTypesList != null) {
+            severityTypesList = (ArrayList<BrSeverityType>)((ArrayList)severityTypesList).clone();
             BrSeverityType dummy = new BrSeverityType();
             dummy.setCode("");
             dummy.setDisplayValue(" ");
@@ -172,6 +174,7 @@ public class BrPageBean extends AbstractBackingBean {
             severityTypes = severityTypesList.toArray(new BrSeverityType[severityTypesList.size()]);
         }
         if (targetTypesList != null) {
+            targetTypesList = (ArrayList<BrValidationTargetType>)((ArrayList)targetTypesList).clone();
             BrValidationTargetType dummy = new BrValidationTargetType();
             dummy.setCode("");
             dummy.setDisplayValue(" ");
@@ -179,6 +182,7 @@ public class BrPageBean extends AbstractBackingBean {
             targetTypes = targetTypesList.toArray(new BrValidationTargetType[targetTypesList.size()]);
         }
         if (applicationMomentsList != null) {
+            applicationMomentsList = (ArrayList<ApplicationActionType>)((ArrayList)applicationMomentsList).clone();
             ApplicationActionType dummy = new ApplicationActionType();
             dummy.setCode("");
             dummy.setDisplayValue(" ");
@@ -186,6 +190,7 @@ public class BrPageBean extends AbstractBackingBean {
             applicationMoments = applicationMomentsList.toArray(new ApplicationActionType[applicationMomentsList.size()]);
         }
         if (serviceMomentsList != null) {
+            serviceMomentsList = (ArrayList<ServiceActionType>)((ArrayList)serviceMomentsList).clone();
             ServiceActionType dummy = new ServiceActionType();
             dummy.setCode("");
             dummy.setDisplayValue(" ");
@@ -193,6 +198,7 @@ public class BrPageBean extends AbstractBackingBean {
             serviceMoments = serviceMomentsList.toArray(new ServiceActionType[serviceMomentsList.size()]);
         }
         if (requestTypesList != null) {
+            requestTypesList = (ArrayList<RequestType>)((ArrayList)requestTypesList).clone();
             RequestType dummy = new RequestType();
             dummy.setCode("");
             dummy.setDisplayValue(" ");
@@ -200,6 +206,7 @@ public class BrPageBean extends AbstractBackingBean {
             requestTypes = requestTypesList.toArray(new RequestType[requestTypesList.size()]);
         }
         if (rrrTypesList != null) {
+            rrrTypesList = (ArrayList<RrrType>)((ArrayList)rrrTypesList).clone();
             RrrType dummy = new RrrType();
             dummy.setCode("");
             dummy.setDisplayValue(" ");
@@ -207,6 +214,7 @@ public class BrPageBean extends AbstractBackingBean {
             rrrTypes = rrrTypesList.toArray(new RrrType[rrrTypesList.size()]);
         }
         if (regMomentsList != null) {
+            regMomentsList = (ArrayList<RegistrationStatusType>)((ArrayList)regMomentsList).clone();
             RegistrationStatusType dummy = new RegistrationStatusType();
             dummy.setCode("");
             dummy.setDisplayValue(" ");

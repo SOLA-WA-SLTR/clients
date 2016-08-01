@@ -1,5 +1,5 @@
 package org.fao.sola.admin.web.beans.db;
-
+ 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
 import com.vividsolutions.jts.io.WKBWriter;

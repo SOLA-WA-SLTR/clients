@@ -1,5 +1,6 @@
 package org.fao.sola.admin.web.beans.refdata;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -75,6 +76,7 @@ public class PanelLauncherPageBean extends AbstractBackingBean {
         // Load panel launcher groups
         List<PanelLauncherGroup> panleLauncherGroupsList = refEjb.getCodeEntityList(PanelLauncherGroup.class, languageBean.getLocale());
         if(panleLauncherGroupsList != null){
+            panleLauncherGroupsList = (ArrayList<PanelLauncherGroup>)((ArrayList)panleLauncherGroupsList).clone();
             // Add dummy
             PanelLauncherGroup dummy = new PanelLauncherGroup();
             dummy.setCode("");

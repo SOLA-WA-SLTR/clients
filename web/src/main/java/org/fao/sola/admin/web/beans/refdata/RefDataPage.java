@@ -62,6 +62,7 @@ import org.sola.admin.services.ejb.refdata.entities.ServiceStatusType;
 import org.sola.admin.services.ejb.refdata.entities.TransactionStatusType;
 import org.sola.admin.services.ejb.refdata.entities.TypeAction;
 import org.sola.admin.services.ejb.refdata.entities.ValuationType;
+import org.sola.admin.services.ejb.refdata.entities.ZoneType;
 
 /**
  * Generic reference data class to manage various reference data tables
@@ -212,6 +213,8 @@ public class RefDataPage extends AbstractBackingBean {
             refClass = NotationStatusType.class;
         } else if (type.equalsIgnoreCase("VALUATION_TYPE")){
             refClass = ValuationType.class;
+        } else if (type.equalsIgnoreCase("ZONE_TYPE")){
+            refClass = ZoneType.class;
         } else if (type.equalsIgnoreCase("REQUEST_DISPLAY_GROUP")){
             refClass = RequestDisplayGroup.class;
         } else if (type.equalsIgnoreCase("PUBLIC_DISPLAY_TYPE")){

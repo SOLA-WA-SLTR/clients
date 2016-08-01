@@ -35,6 +35,9 @@ OT.Map = function(mapOptions) {
 
     // Boolean flag, indicating whether map can be edited. If false, editing tools will be hidden
     var isMapEditable = mapOptions.isMapEditable ? mapOptions.isMapEditable : false;
+    
+    // Boolean flag, indicating whether CS is offline or not
+    var isOffline = mapOptions.isOffline ? mapOptions.isOffline : false;
 
     // Map toolbar reference
     var mapToolbar;
@@ -146,19 +149,44 @@ OT.Map = function(mapOptions) {
     map = new OpenLayers.Map('map', {
         div: "map",
         allOverlays: false,
-        maxResolution: 19.296875,
         projection: this.destCrs,
         displayProjection: this.sourceCrs,
+        maxExtentBounds: this.maxExtentBounds,
+        initialZoomBounds: this.initialZoomBounds,
         units: 'm',
-        zoom: 5
+        zoom: 22
     });
 
-    var gsat = new OpenLayers.Layer.Google("Google Earth", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
-    var gmap = new OpenLayers.Layer.Google("Google Map", {numZoomLevels: 20, visibility: false});
-    map.addLayers([gsat, gmap]);
-   
+    try {
+        if(!isOffline){
+            var gsat = new OpenLayers.Layer.Google("Google Earth", {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22});
+            var gmap = new OpenLayers.Layer.Google("Google Map", {numZoomLevels: 20, visibility: false});
+            map.addLayers([gsat, gmap]);
+        }
+    } catch (e) {
+
+    }
+
     if (layers.length > 0) {
         map.addLayers(layers);
+    }
+
+    // Check for base layers
+    var hasBaseLayer = false;
+    if(map.layers.length > 0){
+        for (var i = 0; i < map.layers.length; i++) {
+            if(map.layers[i].isBaseLayer === true){
+                hasBaseLayer = true;
+                break;
+            }
+        }
+    }
+    
+    if(!hasBaseLayer){
+        // Add dummy base layer
+        var emptyBase = new OpenLayers.Layer("Empty",{isBaseLayer: true});
+        map.addLayers([emptyBase]);
+        map.setLayerIndex(emptyBase, 0);
     }
     
     map.events.register('changelayer', map, handleLayerChange);
