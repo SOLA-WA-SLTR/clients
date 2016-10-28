@@ -27,7 +27,7 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <registryVersion>1607a</registryVersion>
+        <registryVersion>1610b</registryVersion>
     </properties>
     
     <dependencies>
