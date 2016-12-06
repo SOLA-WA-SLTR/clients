@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -263,10 +264,15 @@ public class MigrationPageBean extends AbstractBackingBean {
                             }
                         }
 
-                        if (!StringUtility.isEmpty(location)) {
-                            baUnit.setLocation(location);
-                        }
+                        //if (!StringUtility.isEmpty(location)) {
+                        //    baUnit.setLocation(location);
+                        //}
 
+                        baUnit.setLocation(
+                                StringUtility.empty(claim.getDescription()) 
+                                        + " " + StringUtility.empty(lga) 
+                                        + " " + StringUtility.empty(ward));
+                        
                         if (!StringUtility.isEmpty(claim.getLandUseCode())) {
                             baUnit.setLandUse(claim.getLandUseCode());
                         }
@@ -347,10 +353,12 @@ public class MigrationPageBean extends AbstractBackingBean {
 //                        }
 //
                         rrr.setRrrShareList(new ArrayList<RrrShare>());
+                        rrr.setRegistrationDate(claim.getLodgementDate());
+                        rrr.setDateCommenced(claim.getStartDate());
 
                         BaUnitNotation notation = new BaUnitNotation();
                         notation.setRrrId(baUnit.getId());
-                        notation.setNotationText(rrr.getTypeCode());
+                        notation.setNotationText("Certificate of Occupancy results from Systematic Land Title Registration");
                         rrr.setNotation(notation);
 
                         if (claim.getShares() != null) {
@@ -418,7 +426,11 @@ public class MigrationPageBean extends AbstractBackingBean {
                                 }
 
                                 source.setDescription(attachment.getDescription());
-                                source.setRecordation(attachment.getDocumentDate());
+                                if(attachment.getDocumentDate() == null){
+                                    source.setRecordation(Calendar.getInstance().getTime());
+                                } else {
+                                    source.setRecordation(attachment.getDocumentDate());
+                                }
                                 source.setReferenceNr(attachment.getReferenceNr());
                                 source.setTypeCode(attachment.getTypeCode());
                                 source.setContent(claim.getDescription());
@@ -447,8 +459,7 @@ public class MigrationPageBean extends AbstractBackingBean {
                         Application app = new Application();
                         Party contactPerson = new Party();
                         Address contactPersonAddress = new Address();
-                        contactPersonAddress.setDescription(claim.getClaimant().getAddress());
-
+                        contactPersonAddress.setDescription(StringUtility.empty(claim.getClaimant().getAddress()));
                         contactPerson.setAddress(contactPersonAddress);
                         contactPerson.setDob(claim.getClaimant().getBirthDate());
                         contactPerson.setEmail(claim.getClaimant().getEmail());
@@ -461,9 +472,11 @@ public class MigrationPageBean extends AbstractBackingBean {
                         contactPerson.setPhone(claim.getClaimant().getPhone());
                         if (claim.getClaimant().isPerson()) {
                             contactPerson.setTypeCode("naturalPerson");
+                            contactPerson.setNationality("Nigeria");
                         } else {
                             contactPerson.setTypeCode("nonNaturalPerson");
                         }
+                        
                         app.setNr(claim.getNr());
                         app.setContactPerson(contactPerson);
                         List<CadastreObject> coList = new ArrayList<>();
@@ -474,6 +487,9 @@ public class MigrationPageBean extends AbstractBackingBean {
                         appProp.setApplicationId(app.getId());
                         appProp.setNameFirstpart(baUnit.getNameFirstpart());
                         appProp.setNameLastpart(baUnit.getNameLastpart());
+                        if(claim.getClaimArea() > 0){
+                            appProp.setArea(new BigDecimal(claim.getClaimArea()));
+                        }
                         app.setPropertyList(new ArrayList<ApplicationProperty>());
                         app.getPropertyList().add(appProp);
                         
